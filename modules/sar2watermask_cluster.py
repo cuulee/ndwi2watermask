@@ -51,7 +51,8 @@ flist=listdir(sarIn)
 
 for f in flist:
     product = ProductIO.readProduct(sarIn+"/"+f)
-
+    print("\n processing " + f "\n")
+    print("at " + datetime.datetime.now() + "\n")
 
     # Obtain some attributes
 
@@ -180,6 +181,8 @@ for f in flist:
     System.gc()
     
     ### remove scene from folder
+    print("\n REMOVING " + f "\n")
+
     os.remove(sarIn+"/"+f)
 
 print("\n********** sar2watermask completed!" + str(len(flist))  + " scenes processed\n********** Elapsed time: " + str(datetime.datetime.now()-t0) + "\n********** End of message\n")
