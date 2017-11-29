@@ -51,7 +51,7 @@ flist=listdir(sarIn)
 
 for f in flist:
     product = ProductIO.readProduct(sarIn+"/"+f)
-    print("\n processing " + f "\n")
+    print("\n processing " + f + "\n")
     print("at " + datetime.datetime.now() + "\n")
 
     # Obtain some attributes
