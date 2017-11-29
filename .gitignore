@@ -2,6 +2,10 @@
 
 s1a_scenes/
 
+# Credentials
+
+parameters/credentials.py
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

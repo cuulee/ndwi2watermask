@@ -1,8 +1,12 @@
 # connect to the API
 from sentinelsat import SentinelAPI, read_geojson, geojson_to_wkt
 from datetime import date, datetime
+import sys 
+import os
 
+sys.path.append(os.path.abspath("/users/stud09/martinsd/proj/sar2watermask/parameters"))
 
+from credentials import *
 
 api = SentinelAPI(username, password, 'https://scihub.copernicus.eu/dhus')
 
