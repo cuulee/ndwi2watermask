@@ -181,7 +181,7 @@ for f in flist:
     System.gc()
     
     ### remove scene from folder
-    print("\n REMOVING " + f "\n")
+    print("\n REMOVING " + f + "\n")
 
     os.remove(sarIn+"/"+f)
 
