@@ -1,0 +1,20 @@
+
+SHELL=/bin/bash
+MAILTO="jmigueldelgado@gmail.com"
+
+0 6 * * 6 /users/stud09/martinsd/local/miniconda2/envs/snappy/bin/python2 /users/stud09/martinsd/proj/sar2watermask/modules/getRecentScenes.py
+0 18 * * 6 qsub /users/stud09/martinsd/proj/sar2watermask/jobs/sar2watermask.job
+0 6 * * 0 qsub /users/stud09/martinsd/proj/sar2watermask/jobs/polygonize.job
+0 18 * * 0 /users/stud09/martinsd/proj/sar2watermask/modules/cleanup.sh
+
+#0 1 * * 3 /users/stud09/martinsd/local/miniconda2/envs/snappy/bin/python2 /users/stud09/martinsd/proj/sar2watermask/modules/getRecentScenes.py
+#0 6 * * 3 qsub /users/stud09/martinsd/proj/sar2watermask/jobs/sar2watermask.job
+#0 13 * * 3 qsub /users/stud09/martinsd/proj/sar2watermask/jobs/polygonize.job
+#0 6 * * 4 /users/stud09/martinsd/proj/sar2watermask/modules/cleanup.sh
+
+# download scenes every saturday at 6 am
+# process data every saturday at 6 pm
+# polygonize every sunday at 6 am
+# cleanup input data every sunday at 6 pm
+
+# in case of failure, uncomment the second list of jobs to retry on wednesday
