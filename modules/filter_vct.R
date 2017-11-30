@@ -3,7 +3,7 @@ require(dplyr)
 library(lubridate)
 library(rgeos)
 
-orson=FALSE
+orson=TRUE
 
 if(orson)
 {
@@ -40,4 +40,5 @@ for(f in flist)
 
         
         st_write(psimpl,paste0(wmIn,"/",f,"_simplified.gml"),driver="GML")
+        if(file.exists(paste0(wmIn,"/",f))) file.remove(paste0(wmIn,"/",f))
     }
