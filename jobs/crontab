@@ -5,7 +5,8 @@ MAILTO="jmigueldelgado@gmail.com"
 0 6 * * 6 /users/stud09/martinsd/local/miniconda2/envs/snappy/bin/python2 /users/stud09/martinsd/proj/sar2watermask/modules/getRecentScenes.py
 0 18 * * 6 qsub /users/stud09/martinsd/proj/sar2watermask/jobs/sar2watermask.job
 0 6 * * 0 qsub /users/stud09/martinsd/proj/sar2watermask/jobs/polygonize.job
-0 18 * * 0 /users/stud09/martinsd/proj/sar2watermask/modules/cleanup.sh
+0 18 * * 0 qsub /users/stud09/martinsd/proj/sar2watermask/jobs/st_simplify.job
+#0 18 * * 0 /users/stud09/martinsd/proj/sar2watermask/modules/cleanup.sh
 
 #0 1 * * 3 /users/stud09/martinsd/local/miniconda2/envs/snappy/bin/python2 /users/stud09/martinsd/proj/sar2watermask/modules/getRecentScenes.py
 #0 6 * * 3 qsub /users/stud09/martinsd/proj/sar2watermask/jobs/sar2watermask.job
