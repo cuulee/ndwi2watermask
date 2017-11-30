@@ -2,6 +2,8 @@
 
 A project for automatic download and processing sentinel-1 SAR files. It calibrates, filters, extracts watermask, writes to GeoTiff, polygonizes and simplifies polygon.
 
+Before you start, read the configuration instructions on the [wiki](https://github.com/jmigueldelgado/sar2watermask/wiki/configuration)
+
 The scripts are suited to work on a PBS cluster. There is a crontab that schedules the jobs to run once a week.
 
 The workflow is as follows:
