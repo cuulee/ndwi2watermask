@@ -3,7 +3,7 @@ require(dplyr)
 library(lubridate)
 library(rgeos)
 library(reshape2)
-orson=FALSE
+orson=TRUE
 
 if(orson)
 {
@@ -22,7 +22,11 @@ wmIn <- paste0(scratch,"/watermasks")
 
 flist <- list.files(wmIn,pattern=".gml")
 
-cogerh <- st_read(paste0(proj,"/auxdata/cogerh/cogerh.gml")) %>% as_tibble %>% st_as_sf() %>% st_set_crs(32724) %>% select(-fid)
+cogerh <- st_read(paste0(proj,"/auxdata/cogerh/cogerh.gml")) %>%
+    as_tibble %>%
+    st_as_sf() %>%
+    st_set_crs(32724) %>%
+    select(-fid)
 
 #st_write(cogerh,paste0(proj,"/auxdata/cogerh/cogerh.gml"))
 
@@ -32,9 +36,11 @@ for(f in flist)
         p <- st_read(paste0(wmIn,"/",f)) %>%
             as_tibble %>%
             st_as_sf %>%
+            st_set_crs(4326) %>%
             filter(DN>0) %>%
             st_transform(crs=32724) %>%
-            mutate(ingestion_time=strsplit(f,"_")[[1]][5] %>% ymd_hms()) %>%
+            mutate(ingestion_time=strsplit(f,"_")[[1]][5] %>%
+                       ymd_hms()) %>%
             mutate(id_in_scene=row_number(),area=st_area(.)) %>%
             filter(as.numeric(area)>1000) %>%
             select(-fid,-DN)
@@ -45,7 +51,10 @@ for(f in flist)
         ids=data_frame(id_cogerh=cogerh$id[ints$value],id_in_scene=psimpl$id_in_scene[ints$L1])
         
         #pfilter <- left_join(ids,psimpl) %>% st_as_sf %>% split(.$id_cogerh) %>% lapply(st_union) %>% do.call(c,.) %>% st_cast
-        pfilter <- left_join(ids,psimpl) %>% st_as_sf %>% group_by(id_cogerh) %>% summarize(ingestion_time=first(ingestion_time),area=sum(area)) %>%
+        pfilter <- left_join(ids,psimpl) %>%
+            st_as_sf %>%
+            group_by(id_cogerh) %>%
+            summarize(ingestion_time=first(ingestion_time),area=sum(area)) %>%
             st_transform(crs=4326) ## back to latlong
         
         st_write(pfilter,paste0(wmIn,"/",f,"_simplified.gml"),driver="GML")
