@@ -1,7 +1,6 @@
 require(sf)
 require(dplyr)
 library(lubridate)
-library(rgeos)
 library(reshape2)
 orson=TRUE
 
