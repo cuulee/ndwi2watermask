@@ -45,7 +45,7 @@ for(f in flist)
             select(-fid,-DN)
         
         psimpl <- st_simplify(p,preserveTopology=TRUE,dTolerance=11)
-        ints <- st_intersects(psimpl,cogerh,sparse=TRUE) %>% melt(.)
+        ints <- st_intersects(psimpl,cogerh,sparse=TRUE) %>% unclass(.) %>% melt(.)
 
         ids=data_frame(id_cogerh=cogerh$id[ints$value],id_in_scene=psimpl$id_in_scene[ints$L1])
         
