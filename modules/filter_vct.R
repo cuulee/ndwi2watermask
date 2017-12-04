@@ -23,7 +23,8 @@ flist <- list.files(wmIn,pattern="watermask.gml$")
 
 cogerh <- st_read(paste0(proj,"/auxdata/cogerh.geojson")) %>%
     as_tibble %>%
-    st_as_sf()
+    st_as_sf() %>%
+    st_transform(crs=32724)
 
 ### read, remove small parts, remove DN==0 (land), simplify with threshold between 10 and 15 preserving topology. It should reduce size of vector by a factor of at least 3.
 for(f in flist)
