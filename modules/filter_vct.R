@@ -31,6 +31,9 @@ cogerh <- st_read(paste0(proj,"/auxdata/cogerh/cogerh.gml")) %>%
 
 ### read, remove small parts, remove DN==0 (land), simplify with threshold between 10 and 15 preserving topology. It should reduce size of vector by a factor of at least 3.
 for(f in flist)
+{
+    ### if file has't been processed yet:
+    if(!file.exists(paste0(wmIn,"/",f,"_simplified.gml")))
     {
         p <- st_read(paste0(wmIn,"/",f)) %>%
             as_tibble %>%
@@ -56,9 +59,9 @@ for(f in flist)
             summarize(ingestion_time=first(ingestion_time),area=sum(area)) %>%
             st_transform(crs=4326) ## back to latlong
         
-        if(!file.exists(paste0(wmIn,"/",f,"_simplified.gml")))
-            {
-                st_write(pfilter,paste0(wmIn,"/",f,"_simplified.gml"),driver="GML")
-            }
-        if(file.exists(paste0(wmIn,"/",f))) file.remove(paste0(wmIn,"/",f))
+        
+        st_write(pfilter,paste0(wmIn,"/",f,"_simplified.gml"),driver="GML")
+    }
+    ### if file has been processed and input file is still stored, remove it
+    if(file.exists(paste0(wmIn,"/",f))) file.remove(paste0(wmIn,"/",f))
     }
