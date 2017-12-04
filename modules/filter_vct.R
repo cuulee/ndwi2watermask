@@ -56,6 +56,9 @@ for(f in flist)
             summarize(ingestion_time=first(ingestion_time),area=sum(area)) %>%
             st_transform(crs=4326) ## back to latlong
         
-        st_write(pfilter,paste0(wmIn,"/",f,"_simplified.gml"),driver="GML")
-        #if(file.exists(paste0(wmIn,"/",f))) file.remove(paste0(wmIn,"/",f))
+        if(!file.exists(paste0(wmIn,"/",f,"_simplified.gml")))
+            {
+                st_write(pfilter,paste0(wmIn,"/",f,"_simplified.gml"),driver="GML")
+            }
+        if(file.exists(paste0(wmIn,"/",f))) file.remove(paste0(wmIn,"/",f))
     }
