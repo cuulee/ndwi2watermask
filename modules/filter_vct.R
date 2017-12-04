@@ -19,7 +19,7 @@ sarIn=paste0(sardir,"/in")
 sarOut=paste0(sardir,"/out")
 wmIn <- paste0(scratch,"/watermasks")
 
-flist <- list.files(wmIn,pattern=".gml")
+flist <- list.files(wmIn,pattern="watermask.gml$")
 
 cogerh <- st_read(paste0(proj,"/auxdata/cogerh/cogerh.gml")) %>%
     as_tibble %>%
@@ -27,14 +27,17 @@ cogerh <- st_read(paste0(proj,"/auxdata/cogerh/cogerh.gml")) %>%
     st_set_crs(32724) %>%
     select(-fid)
 
-#st_write(cogerh,paste0(proj,"/auxdata/cogerh/cogerh.gml"))
-
 ### read, remove small parts, remove DN==0 (land), simplify with threshold between 10 and 15 preserving topology. It should reduce size of vector by a factor of at least 3.
 for(f in flist)
 {
-    ### if file has't been processed yet:
+    cat("\nChecking file:\n",f,"\n")
+
+
+### if file has't been processed yet:
     if(!file.exists(paste0(wmIn,"/",f,"_simplified.gml")))
     {
+        cat("\nNot yet processed, processing ....\n")
+
         p <- st_read(paste0(wmIn,"/",f)) %>%
             as_tibble %>%
             st_as_sf %>%
@@ -61,7 +64,13 @@ for(f in flist)
         
         
         st_write(pfilter,paste0(wmIn,"/",f,"_simplified.gml"),driver="GML")
+    } else cat("\nAlready processed, jumping over simplify and filter ....\n")
+
+
+### if file has been processed and input file is still stored, remove it
+    if(file.exists(paste0(wmIn,"/",f)))
+    {
+        cat("\nDeleting:\n",paste0(wmIn,"/",f))
+        file.remove(paste0(wmIn,"/",f))
     }
-    ### if file has been processed and input file is still stored, remove it
-    if(file.exists(paste0(wmIn,"/",f))) file.remove(paste0(wmIn,"/",f))
-    }
+}
