@@ -55,15 +55,17 @@ for(f in flist)
 
         ids=data_frame(id_cogerh=cogerh$id[ints$value],id_in_scene=psimpl$id_in_scene[ints$L1])
         
-        #pfilter <- left_join(ids,psimpl) %>% st_as_sf %>% split(.$id_cogerh) %>% lapply(st_union) %>% do.call(c,.) %>% st_cast
-        pfilter <- left_join(ids,psimpl) %>%
-            st_as_sf %>%
-            group_by(id_cogerh) %>%
-            summarize(ingestion_time=first(ingestion_time),area=sum(area)) %>%
-            st_transform(crs=4326) ## back to latlong
+                                        #pfilter <- left_join(ids,psimpl) %>% st_as_sf %>% split(.$id_cogerh) %>% lapply(st_union) %>% do.call(c,.) %>% st_cast
+        if(nrow(ids>0)
+           {
+               pfilter <- left_join(ids,psimpl) %>%
+                   st_as_sf %>%
+                   group_by(id_cogerh) %>%
+                   summarize(ingestion_time=first(ingestion_time),area=sum(area)) %>%
+                   st_transform(crs=4326) ## back to latlong
+               st_write(pfilter,paste0(wmIn,"/",f,"_simplified.gml"),driver="GML")
+           } else cat("\n\nPolygons matching the COGERH watermask were not found in ",f,"\n")
         
-        
-        st_write(pfilter,paste0(wmIn,"/",f,"_simplified.gml"),driver="GML")
     } else cat("\nAlready processed, jumping over simplify and filter ....\n")
 
 
