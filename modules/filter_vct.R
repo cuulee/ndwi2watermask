@@ -2,7 +2,7 @@ require(sf)
 require(dplyr)
 library(lubridate)
 library(reshape2)
-orson=TRUE
+orson=FALSE
 
 if(orson)
 {
@@ -21,20 +21,18 @@ wmIn <- paste0(scratch,"/watermasks")
 
 flist <- list.files(wmIn,pattern="watermask.gml$")
 
-cogerh <- st_read(paste0(proj,"/auxdata/cogerh/cogerh.gml")) %>%
+cogerh <- st_read(paste0(proj,"/auxdata/cogerh.geojson")) %>%
     as_tibble %>%
-    st_as_sf() %>%
-    st_set_crs(32724) %>%
-    select(-fid)
+    st_as_sf()
 
 ### read, remove small parts, remove DN==0 (land), simplify with threshold between 10 and 15 preserving topology. It should reduce size of vector by a factor of at least 3.
 for(f in flist)
 {
     cat("\nChecking file:\n",f,"\n")
-
+    fname=substr(f,1,nchar(f)-4)
 
 ### if file has't been processed yet:
-    if(!file.exists(paste0(wmIn,"/",f,"_simplified.gml")))
+    if(!file.exists(paste0(wmIn,"/",fname,"_simplified.gml")))
     {
         cat("\nNot yet processed, processing ....\n")
 
@@ -66,7 +64,7 @@ for(f in flist)
                     group_by(id_cogerh) %>%
                     summarize(ingestion_time=first(ingestion_time),area=sum(area)) %>%
                     st_transform(crs=4326) ## back to latlong
-                st_write(pfilter,paste0(wmIn,"/",f,"_simplified.geojson"),driver="GeoJSON")
+                st_write(pfilter,paste0(wmIn,"/",fname,"_simplified.geojson"),driver="GeoJSON")
             } else cat("\n\nPolygons matching the COGERH watermask were not found in ",f,"\n")
         } else cat("\n\n The watermask was not found, check if scene is over the ocean or if there are no water bodies on the scene. \n\n")
     } else cat("\nAlready processed, jumping over simplify and filter ....\n")
@@ -76,6 +74,7 @@ for(f in flist)
     if(file.exists(paste0(wmIn,"/",f)))
     {
         cat("\nDeleting:\n",paste0(wmIn,"/",f))
-        file.remove(paste0(wmIn,"/",f))
+        try(file.remove(paste0(wmIn,"/",fname,".gml")),silent=TRUE)
+        try(file.remove(paste0(wmIn,"/",fname,".xsd")),silent=TRUE)
     }
 }
