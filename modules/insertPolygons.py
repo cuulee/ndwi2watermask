@@ -45,4 +45,7 @@ for in_file in newlist:
         feat_id = s2w.insert_one(feat).inserted_id
         #print feat_id
 
+    ## remove polygons
+    
+
 
