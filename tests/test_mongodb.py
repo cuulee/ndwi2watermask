@@ -41,10 +41,10 @@ for in_file in newlist:
     for feat in data["features"]:
         dttm = datetime.strptime(feat["properties"]["ingestion_time"],"%Y/%m/%d %H:%M:%S+00")
         feat["properties"]["ingestion_time"] = dttm
+        #dicio = {"geometry":feat["geometry"],"id_cogerh":feat["properties"]["id_cogerh"]}
         feat_id = s2w.insert_one(feat).inserted_id
-        print feat_id
+        #print feat_id
 
-import pprint
 d2 = datetime(2017, 11, 28, 0)
 d1 = datetime(2017, 11, 25, 0)
 
@@ -52,21 +52,40 @@ q2 = s2w.find({'properties.ingestion_time' : {'$gte': d2}})
 q1 = s2w.find({'properties.ingestion_time' : {'$lte': d1}})
 q3 = s2w.find({'properties.id_cogerh' : 3359})
 
-## aggregate NOT WORKING YET!!!
+#### query latest ingestion for each polygon
 
 pipeline = [
     { "$sort" : {"properties.id_cogerh" : 1, "properties.ingestion_time" : 1 }},
     {
         "$group":
         {
-            "id_cogerh" : "properties.id_cogerh",
-            "lastPolygon": {"$last":"$properties.ingestion_time"}
+            "_id" : "$properties.id_cogerh",
+            "latestIngestion" : {
+                "$last":"$properties.ingestion_time"
+            }
         }
     }
 ]
 
-p=s2w.aggregate(pipeline)
+aggrLatest=list(s2w.aggregate(pipeline=pipeline))
 
-print q2[0]["geometry"]["type"]
-print s2w.count({'properties.id_cogerh' : 3359})
-print s2w.count({'properties.ingestion_time' : {'$gte': d}})
+latest=list()
+
+for feat in aggrLatest:
+    poly = s2w.find({'properties.id_cogerh' : feat['_id'],'properties.ingestion_time':feat['latestIngestion']})
+    latest.append(poly[0])
+
+#### aggregate time series of area (volume should be added as well) for each polygon
+
+pipeline = [
+    {
+        "$group":
+        {
+            "_id" : "$properties.id_cogerh",
+            "timeSeries" : { "$push" : { "time" : "$properties.ingestion_time" , "area" : "$properties.area"} }
+        }
+
+    }
+]
+
+TimeSeries = list(s2w.aggregate(pipeline=pipeline))
