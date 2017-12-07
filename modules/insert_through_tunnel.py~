@@ -23,9 +23,30 @@ sarOut=sardir+"/out"
 polOut=scratch + "/watermasks"
 items=os.listdir(polOut)
 
+# for credentials
+sys.path.append(os.path.abspath(proj +"/parameters"))
+
+from credentials import *
+
+
+MONGO_HOST = "141.89.96.184"
+MONGO_DB = "sar2watermask"
+MONGO_PORT = 27017
+
+ssh = paramiko.SSHClient()
+ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+ssh.connect(hostname=MONGO_HOST,username=MONGO_USER,password=MONGO_PASS)
+stdin, stdout, stderr = ssh.exec_command('touch $HOME/hello.world')
+ssh.close()
+
+client = pymongo.MongoClient('127.0.0.1', server.local_bind_port) # server.local_bind_port is assigned local port
+db = client[MONGO_DB]
+pprint.pprint(db.collection_names())
+
+server.stop()
 
 client = MongoClient('mongodb://localhost:27017/')
-db = client.sar2watermask ## db
+#db = client.sar2watermask ## db
 s2w = db.sar2watermask ##  collection
 
 
