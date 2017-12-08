@@ -3,33 +3,37 @@ import json
 import os
 import sys 
 from datetime import datetime
+from sshtunnel import SSHTunnelForwarder
 
+# to load credentials and locations
+sys.path.append(os.path.abspath(proj +"/parameters"))
+
+# to set locations
 orson=False
-if(orson):
-    pyt="/users/stud09/martinsd/local/miniconda2/envs/gdal/bin/python"
-    gdalPol="/users/stud09/martinsd/local/miniconda2/envs/gdal/bin/gdal_polygonize.py"
-    proj="/users/stud09/martinsd/proj/sar2watermask"
-    scratch="/mnt/scratch/martinsd"
-else:
-    pyt="/home/delgado/local/miniconda2/bin/python2"
-    gdalPol="/home/delgado/local/miniconda2/bin/gdal_polygonize.py"
-    proj="/home/delgado/proj/sar2watermask"
-    scratch="/home/delgado/scratch"
 
-    
-sardir=scratch+"/s1a_scenes"
-sarIn=sardir+"/in"
-sarOut=sardir+"/out"
-polOut=scratch + "/watermasks"
-items=os.listdir(polOut)
+from locations import *
+from credentials import *
 
+server = SSHTunnelForwarder(
+    MONGO_HOST,
+    ssh_username=MONGO_USER,
+    ssh_password=MONGO_PASS,
+    remote_bind_address=('127.0.0.1', MONGO_PORT))
 
-client = MongoClient('mongodb://localhost:27017/')
-db = client.sar2watermask ## db
+server.start()
+
+client = MongoClient('127.0.0.1', server.local_bind_port) # server.local_bind_port is assigned local port
+
+## in case you want the local host:
+#client = MongoClient('mongodb://localhost:27017/')
+
+db = client.sar2watermask
 s2w = db.sar2watermask ##  collection
 
+#print(db.collection_names())
 
 newlist = []
+items=os.listdir(polOut)
 
 for names in items:
     if names.endswith('simplified.geojson'):
@@ -52,6 +56,16 @@ for in_file in newlist:
 #    print('\n removing ' + in_file + '\n')
 #    os.remove(polOut + '/' + in_file)
 
-    
+
+#### IT WORKS!!!
+
+server.stop()
 
 
+#### This works, but would need python installed on the webserver and mount of orson's /mnt/scratch, which is not very reliable
+
+#ssh = paramiko.SSHClient()
+#ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+#ssh.connect(hostname=MONGO_HOST,username=MONGO_USER,password=MONGO_PASS)
+#stdin, stdout, stderr = ssh.exec_command('python ')
+#ssh.close()
