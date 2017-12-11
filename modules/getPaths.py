@@ -1,4 +1,12 @@
 from os.path import expanduser
+import sys 
+
+home = {
+    'home' : expanduser("~"),
+    'proj' : expanduser("~") + '/proj/sar2watermask',
+    'auxdata' : expanduser("~") + '/proj/sar2watermask/auxdata',
+    'parameters' : expanduser("~") + '/proj/sar2watermask/parameters'
+}
 
 if expanduser("~")=='/home/delgado':
     home['scratch'] = expanduser("~") + '/scratch'
@@ -18,4 +26,7 @@ polOut=scratch + "/watermasks"
 MONGO_HOST = "141.89.96.184"
 MONGO_DB = "sar2watermask"
 MONGO_PORT = 27017
+
+sys.path.insert(0, home['parameters'])
+from credentials import *
 

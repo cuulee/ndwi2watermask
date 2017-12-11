@@ -14,6 +14,7 @@ from snappy import ProductIO
 from snappy import jpy
 from snappy import HashMap
 from snappy import Rectangle
+from getPaths import *
 
 #############################################
 # MAKE SURE YOU SET THE NECESSARY RAM
@@ -26,8 +27,6 @@ from snappy import Rectangle
 
 t0=datetime.datetime.now()
 
-orson="Yeah!"
-
 outForm='GeoTIFF+XML'
 WKTReader = snappy.jpy.get_type('com.vividsolutions.jts.io.WKTReader')
 HashMap = snappy.jpy.get_type('java.util.HashMap')
@@ -35,16 +34,7 @@ SubsetOp = snappy.jpy.get_type('org.esa.snap.core.gpf.common.SubsetOp')
 Point = snappy.jpy.get_type('java.awt.Point')
 Dimension = snappy.jpy.get_type('java.awt.Dimension')
 
-if(orson):
-    proj="/users/stud09/martinsd/proj/sar2watermask"
-    scratch="/mnt/scratch/martinsd"
-else:    
-    proj="/home/delgado/proj/sar2watermask"
-    scratch=proj
 
-sardir=scratch+"/s1a_scenes"
-sarIn=sardir+"/in"
-sarOut=sardir+"/out"
 flist=listdir(sarIn)
 
 # Read products
