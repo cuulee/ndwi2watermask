@@ -6,7 +6,7 @@ from datetime import datetime
 from sshtunnel import SSHTunnelForwarder
 
 # to load credentials and locations
-sys.path.append(os.path.abspath(proj +"/parameters"))
+sys.path.append(os.path.abspath("/users/stud09/martinsd/proj/sar2watermask/parameters"))
 
 # to set locations
 orson="Yeah!"
