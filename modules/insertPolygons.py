@@ -9,7 +9,7 @@ from sshtunnel import SSHTunnelForwarder
 sys.path.append(os.path.abspath(proj +"/parameters"))
 
 # to set locations
-orson=False
+orson="Yeah!"
 
 from locations import *
 from credentials import *
@@ -53,8 +53,8 @@ for in_file in newlist:
         feat_id = s2w.insert_one(feat).inserted_id
         print feat_id
 
-#    print('\n removing ' + in_file + '\n')
-#    os.remove(polOut + '/' + in_file)
+    print('\n removing ' + in_file + '\n')
+    os.remove(polOut + '/' + in_file)
 
 
 #### IT WORKS!!!
