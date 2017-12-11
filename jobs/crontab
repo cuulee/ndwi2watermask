@@ -2,10 +2,11 @@
 SHELL=/bin/bash
 MAILTO="jmigueldelgado@gmail.com"
 
-0 6 * * 6 /users/stud09/martinsd/local/miniconda2/envs/snappy/bin/python2 /users/stud09/martinsd/proj/sar2watermask/modules/getRecentScenes.py
-0 18 * * 0 qsub /users/stud09/martinsd/proj/sar2watermask/jobs/sar2watermask.job
-0 6 * * 0 qsub /users/stud09/martinsd/proj/sar2watermask/jobs/polygonize.job
-0 6 * * 1 qsub /users/stud09/martinsd/proj/sar2watermask/jobs/st_simplify.job
+0 20 * * 5 /users/stud09/martinsd/local/miniconda2/envs/snappy/bin/python2 /users/stud09/martinsd/proj/sar2watermask/modules/getRecentScenes.py
+0 2 * * 6 qsub /users/stud09/martinsd/proj/sar2watermask/jobs/sar2watermask.job
+0 14 * * 6 qsub /users/stud09/martinsd/proj/sar2watermask/jobs/polygonize.job
+0 14 * * 0 qsub /users/stud09/martinsd/proj/sar2watermask/jobs/st_simplify.job
+0 23 * * 0 /users/stud09/martinsd/local/miniconda2/envs/mongodb/bin/python2 /users/stud09/martinsd/proj/sar2watermask/modules/insertPolygons.py
 
 #0 6 * * 3 /users/stud09/martinsd/local/miniconda2/envs/snappy/bin/python2 /users/stud09/martinsd/proj/sar2watermask/modules/getRecentScenes.py
 #0 18 * * 3 qsub /users/stud09/martinsd/proj/sar2watermask/jobs/sar2watermask.job
@@ -15,5 +16,7 @@ MAILTO="jmigueldelgado@gmail.com"
 # download scenes every saturday at 6 am
 # process data every saturday at 6 pm
 # polygonize every sunday at 6 am
+# simplify in R and save as geojson
+# insert json documents into mongodb in webserver
 
 # in case of failure, uncomment the second list of jobs to retry on wednesday
