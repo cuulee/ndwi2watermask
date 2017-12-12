@@ -27,7 +27,7 @@ else:
 db = client.sar2watermask
 s2w = db.sar2watermask ##  collection
 
-TimeSeries = getTimeSeries(s2w)
+#TimeSeries = getTimeSeries(s2w)
 latestPolys = getLatestIngestionTime(s2w)
 
 x=[]
