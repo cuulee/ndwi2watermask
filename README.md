@@ -25,11 +25,21 @@ The workflow is as follows:
 
 ## Polygonize raster with `polygonize.py`
 - use GDAL for polygonizing looping over all files
- 
+
+## Simplify polygons based on given dataset of maximum reservoir extent
+- match polygons with COGERH watermask and attribute `id`s
+- use `st_simplify` from package _sf_ in _R_ to simplify polygons
+
+## Insert into mongodb
+- insert each `id` together with corresponding spatial feature into _mongodb_
+
+## From the webserver query _mongodb_
+- aggregate db to obtain latest polygon of each `id`
+- aggregate db to obtain time-series of area and volume for each `id`
+
 ## Clean up
 - remove all raster stored in `s1a_scenes/in` and `s1a_scenes/out`
 
 ## To do:
 - improve threshold selection with shupings algorithm
 - parallel processing
-- store output as a database with reservoir ids and ingestion date (possibly mongodb)
