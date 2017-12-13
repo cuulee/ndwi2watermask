@@ -29,12 +29,24 @@ s2w = db.sar2watermask ##  collection
 
 #TimeSeries = getTimeSeries(s2w)
 latestIngestionTime = getLatestIngestionTime(s2w)
+polys= getLatestPolys(s2w)
+
+poly_i={}
+poly_i=
+
+geojson={}
+geojson["type"]="FeatureCollection"
+geojson["crs"]={"type" : "name","properties" : {"name" : "urn:ogc:def:crs:OGC:1.3:CRS84"}}
+
+geojson["features"] = 
+
 latestMinusOne = getLatestIngestionTimeMinusOne(s2w)
+
+if home['home']!='/home/riemer':
+    server.stop()
 
 with open('latestIngestions.tbl','a') as outfile:
     for feat in latestIngestionTime:
         outfile.write('%s\n' %feat['_id'])
     
 
-if home['home']!='/home/riemer':
-    server.stop()

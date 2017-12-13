@@ -4,51 +4,29 @@ library(tidyr)
 library(dplyr)
 library(jsonlite)
 
+oid <- read.table("./latestIngestions.tbl")
+
 m <- mongo("sar2watermask","sar2watermask","mongodb://localhost:27017/")
 
-#pipeline = '[{
-#        "$group":
-#            {
-#                "_id" : "$properties.id_cogerh",
-#                "timeSeries" : { "$push" : { "time" : "$properties.ingestion_time" , "area" : "$properties.area"} }
-#            }        
-#    }]'
-
-pipeline = '[
-        { "$sort" : {"properties.id_cogerh" : 1, "properties.ingestion_time" : 1 }},
-        {
-            "$group":
-            {
-                "_id" : "$properties.id_cogerh",
-                "latestIngestion" : {
-                    "$last":"$properties.ingestion_time"
-                }
-            }
-        }
-    ]'
-
-
-polys=m$aggregate(pipeline,'{"allowDiskUse":true}')
-
 sflist <- list()
-for(i in 1:10])
-{ 
-    datemillis <- as.integer(as.POSIXct(polys$latestIngestion[i])) * 1000
-    id <- polys$`_id`[i]
-####### not working!!!
-    poly = m$find(paste0('{"properties.id_cogerh" : "',id,'", "properties.ingestion_time" : ',datemillis,'"}'))
 
-    poly = m$find(paste0('{"properties.id_cogerh" : ',id,'}'))
-
-    if(poly$geometry$type=="MultiPolygon")
+for(i in 1:nrow(oid))
+{
+    poly = m$find(paste0('{"_id":{"$oid" : "',oid[i,1],'"}}'))
+    if(class(poly$geometry$coordinates[[1]])=="list")
     {
-        for(j in 1:poly$geometry$coordinates[[1]])
+        cat(i,"  type: MultiPolygon\n")
+        latlong <- list()
+        for(j in 1:length(poly$geometry$coordinates[[1]]))
         {
-            latlong[[j]] <- rbind(poly$geometry$coordinates[[1]][[i]][,,1],poly$geometry$coordinates[[1]][[i]][,,2]) %>% t
+            if(length(dim(poly$geometry$coordinates[[1]][[j]]))==2) latlong[[j]] <- poly$geometry$coordinates[[1]][[j]] %>% list
+            if(length(dim(poly$geometry$coordinates[[1]][[j]]))==3) latlong[[j]] <- rbind(poly$geometry$coordinates[[1]][[j]][,,1],poly$geometry$coordinates[[1]][[j]][,,2]) %>% t %>% list
         }
-        sfgPl <- lapply(latlong,st_multipolygon)
-    } else if(poly$geometry$type=="Polygon")
+        ii <- lapply(latlong,is.null) %>% unlist
+        sfgPl <- st_multipolygon(latlong[!ii])
+    } else if(class(poly$geometry$coordinates[[1]])=="array")
     {
+        cat(i,"  type: Polygon\n")
         latlong <- rbind(poly$geometry$coordinates[[1]][,,1],poly$geometry$coordinates[[1]][,,2]) %>% t
         sfgPl <- st_polygon(list(latlong))
     }
