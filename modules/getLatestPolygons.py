@@ -1,5 +1,6 @@
 from pymongo import MongoClient
 from bson import json_util
+import geojson
 import json
 import os
 import sys 
@@ -29,24 +30,36 @@ s2w = db.sar2watermask ##  collection
 
 #TimeSeries = getTimeSeries(s2w)
 latestIngestionTime = getLatestIngestionTime(s2w)
-polys= getLatestPolys(s2w)
 
-poly_i={}
-poly_i=
+## get most recent polygons from mongodb
+polys = getLatestPolys(s2w)
+polys1 = getLatestPolysMinusX(s2w,1)
+polys2 = getLatestPolysMinusX(s2w,2)
+polys3 = getLatestPolysMinusX(s2w,3)
 
-geojson={}
-geojson["type"]="FeatureCollection"
-geojson["crs"]={"type" : "name","properties" : {"name" : "urn:ogc:def:crs:OGC:1.3:CRS84"}}
+## get geojson standard feature collection
+feat_col=aggr2geojson(polys)
+feat_col1=aggr2geojson(polys1)
+feat_col2=aggr2geojson(polys2)
+feat_col3=aggr2geojson(polys3)
 
-geojson["features"] = 
+## write
+f=open(home['home']+'/0_latest.geojson','w')
+geojson.dump(feat_col,f)
+f.close()            
 
-latestMinusOne = getLatestIngestionTimeMinusOne(s2w)
+f=open(home['home']+'/1_month_ago.geojson','w')
+geojson.dump(feat_col1,f)
+f.close()            
+
+f=open(home['home']+'/2_months_ago.geojson','w')
+geojson.dump(feat_col2,f)
+f.close()            
+
+f=open(home['home']+'/3_months_ago.geojson','w')
+geojson.dump(feat_col3,f)
+f.close()            
 
 if home['home']!='/home/riemer':
     server.stop()
-
-with open('latestIngestions.tbl','a') as outfile:
-    for feat in latestIngestionTime:
-        outfile.write('%s\n' %feat['_id'])
-    
 
