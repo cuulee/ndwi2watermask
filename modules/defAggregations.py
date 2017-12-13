@@ -42,7 +42,12 @@ def getLatestIngestionTime(s2w):
     ]
 
     aggrLatest=list(s2w.aggregate(pipeline=pipeline))
-    return(aggrLatest)
+    latest=list()
+    
+    for feat in aggrLatest:
+        poly = s2w.find({'properties.id_cogerh' : feat['_id'],'properties.ingestion_time':feat['latestIngestion']},{'properties.id_cogerh' : 1,'properties.ingestion_time' : 1})
+        latest.append(poly[0])
+    return(latest)
 
 
 def getLatestIngestionTimeMinusOne(s2w):
@@ -62,7 +67,12 @@ def getLatestIngestionTimeMinusOne(s2w):
     ]
     
     aggrLatest=list(s2w.aggregate(pipeline=pipeline))
-    return(aggrLatest)
+    latest=list()
+    
+    for feat in aggrLatest:
+        poly = s2w.find({'properties.id_cogerh' : feat['_id'],'properties.ingestion_time':feat['latestIngestion']})
+        latest.append(poly[0])
+    return(latest)
 
 
 def getLatestPolysMinusOne(s2w):

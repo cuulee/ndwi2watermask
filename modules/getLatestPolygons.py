@@ -7,7 +7,6 @@ from datetime import datetime
 from sshtunnel import SSHTunnelForwarder
 from defAggregations import *
 from getPaths import *
-import pandas as pd
 
 if home['home']!='/home/riemer':
     server = SSHTunnelForwarder(
@@ -32,16 +31,9 @@ s2w = db.sar2watermask ##  collection
 latestIngestionTime = getLatestIngestionTime(s2w)
 latestMinusOne = getLatestIngestionTimeMinusOne(s2w)
 
-df=pd.DataFrame
-
-for item in latestMinusOne:
-    df=pd.DataFrame.append([item['_id'],item['latestIngestion']])
-
-
-with open('latestIngestions.json','a') as outfile:
+with open('latestIngestions.tbl','a') as outfile:
     for feat in latestIngestionTime:
-        json.dump(feat,outfile,default=json_util.default)
-        outfile.write('\n')
+        outfile.write('%s\n' %feat['_id'])
     
 
 if home['home']!='/home/riemer':
