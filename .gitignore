@@ -1,3 +1,7 @@
+# log files
+
+*.o14*
+
 # Sentinel data
 
 s1a_scenes/
