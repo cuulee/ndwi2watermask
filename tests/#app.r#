@@ -3,7 +3,8 @@ library(leaflet)
 library(rgdal)
 library(raster)
 library(sf)
-poly <- st_read("~/0_latest.geojson")
+
+poly <- st_read("~/proj/sar2watermask/tests/0_latest.geojson")
 
 poly <- poly["geometry"]
 
