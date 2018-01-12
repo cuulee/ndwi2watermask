@@ -1,6 +1,7 @@
 from defFuncemeApi import *
 from getPaths import *
-
+from pymongo import MongoClient
+import json
 
 if home['home']!='/home/riemer':
     server = SSHTunnelForwarder(
@@ -24,8 +25,10 @@ func = db.funceme ##  collection
 reservs = getReservoir()
 
 for reserv in reservs:
-    code = reserv['code']
+    code = reserv['properties']['code']
     ts = getRecentVolume(code)
-    obj = {'reservoir' : code , ts}
-    obj_id = func.update({"id":code},{"$set" : ts},upsert=True).upserted_id
-    print obj_id
+    obj = ts[6:9]
+    func.update({"reservoir":code},{"$addToSet" : {'timeSeries' : obj }},upsert=True) #### this is wrong
+
+
+test=func.find({"reservoir":code})
