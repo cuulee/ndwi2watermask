@@ -1,3 +1,5 @@
+print("1 begin imports\n")
+
 from os import listdir
 import os
 import datetime
@@ -27,12 +29,16 @@ from getPaths import *
 
 t0=datetime.datetime.now()
 
+print("2 begin defining functions from snappy\n")
+
 outForm='GeoTIFF+XML'
 WKTReader = snappy.jpy.get_type('com.vividsolutions.jts.io.WKTReader')
 HashMap = snappy.jpy.get_type('java.util.HashMap')
 SubsetOp = snappy.jpy.get_type('org.esa.snap.core.gpf.common.SubsetOp')
 Point = snappy.jpy.get_type('java.awt.Point')
 Dimension = snappy.jpy.get_type('java.awt.Dimension')
+System = jpy.get_type('java.lang.System')
+BandDescriptor = jpy.get_type('org.esa.snap.core.gpf.common.BandMathsOp$BandDescriptor')
 
 
 flist=listdir(sarIn)
@@ -40,6 +46,8 @@ flist=listdir(sarIn)
 # Read products
 
 for f in flist:
+    print("3 begin reading product\n")
+
     product = ProductIO.readProduct(sarIn+"/"+f)
     print("\n processing " + f + "\n")
     print("at " + str(datetime.datetime.now()) + "\n")
@@ -53,6 +61,7 @@ for f in flist:
     band_names = product.getBandNames()
 
     # Initiate processing
+    print("4 initiate processing\n")
     
     GPF.getDefaultInstance().getOperatorSpiRegistry().loadOperatorSpis()
 
@@ -112,7 +121,6 @@ for f in flist:
 
         expression = open(proj+"/parameters/"+'band_maths1.txt',"r").read()
         
-        BandDescriptor = jpy.get_type('org.esa.snap.core.gpf.common.BandMathsOp$BandDescriptor')
 
         targetBand1 = BandDescriptor()
         targetBand1.name = 'watermask'
@@ -142,7 +150,6 @@ for f in flist:
         #band_names = CalSfWaterCorr1.getBandNames()
         #print("Bands:   %s" % (list(band_names)))
 
-        BandDescriptor = jpy.get_type('org.esa.snap.core.gpf.common.BandMathsOp$BandDescriptor')
         
         targetBand1 = BandDescriptor()
         targetBand1.name = 'watermask_corr'
@@ -167,7 +174,6 @@ for f in flist:
         CalSfWaterCorr1.dispose()
         CalSfWaterCorr2.dispose()        
     product.dispose()
-    System = jpy.get_type('java.lang.System')
     System.gc()
     
     ### remove scene from folder
