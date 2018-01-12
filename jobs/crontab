@@ -23,7 +23,7 @@ MAILTO="jmigueldelgado@gmail.com"
 0 23 * * 7 /users/stud09/martinsd/local/miniconda2/envs/mongodb/bin/python2 /users/stud09/martinsd/proj/sar2watermask/modules/insertPolygons.py
 
 ### clean up
-40 14 * * 5 /users/stud09/martinsd/local/miniconda2/envs/mongodb/bin/python2 /users/stud09/martinsd/proj/sar2watermask/modules/cleanup.py
+55 14 * * 5 /users/stud09/martinsd/local/miniconda2/envs/mongodb/bin/python2 /users/stud09/martinsd/proj/sar2watermask/modules/cleanup.py
 
 
 # download scenes every saturday at 6 am
