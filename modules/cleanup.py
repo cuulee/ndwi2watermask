@@ -5,15 +5,15 @@ from getPaths import *
 current_time = time.time()
 
 for f in os.listdir(sarOut):
-    creation_time = os.path.getctime(satOut + "/" + f)
+    creation_time = os.path.getctime(sarOut + "/" + f)
     if (current_time - creation_time) // (24 * 3600) >= 14:
-        os.unlink(satOut + "/" +f)
+        os.unlink(sarOut + "/" +f)
         print('{} removed'.format(f))
 
 for f in os.listdir(sarIn):
-    creation_time = os.path.getctime(satIn + "/" +f)
+    creation_time = os.path.getctime(sarIn + "/" +f)
     if (current_time - creation_time) // (24 * 3600) >= 14:
-        os.unlink(satIn + "/" + f)
+        os.unlink(sarIn + "/" + f)
         print('{} removed'.format(f))
 
 for f in os.listdir(polOut):
