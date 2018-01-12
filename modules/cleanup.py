@@ -13,7 +13,7 @@ for f in os.listdir(sarOut):
 for f in os.listdir(sarIn):
     creation_time = os.path.getctime(satIn + "/" +f)
     if (current_time - creation_time) // (24 * 3600) >= 14:
-        os.unlink(satIn + "/" +)
+        os.unlink(satIn + "/" + f)
         print('{} removed'.format(f))
 
 for f in os.listdir(polOut):
