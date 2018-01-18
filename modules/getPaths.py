@@ -15,6 +15,7 @@ else:
 
 pyt = home['home'] + "/local/miniconda2/envs/gdal/bin/python"
 gdalPol = home['home'] + "/local/miniconda2/envs/gdal/bin/gdal_polygonize.py"
+gdalMerge = home['home'] + "/local/miniconda2/envs/gdal/bin/gdal_merge.py"
 proj = home['proj']
 scratch= home['scratch']
     

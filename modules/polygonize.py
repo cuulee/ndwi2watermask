@@ -9,17 +9,24 @@ t0=datetime.datetime.now()
 items=os.listdir(sarOut)
 
 newlist = []
+
 for names in items:
     if names.endswith("watermask.tif"):
-        newlist.append(names)
+        newlist.append(names[0:67])
+
+newlist = list(set(newlist))
+
 
 #print(newlist)
 
 
-for in_file in newlist:
-    print("\n polygonizing " + in_file + "\n")
-    out_file = in_file[:-4] + ".gml"
-    subprocess.call([pyt,gdalPol,sarOut + "/" + in_file,"-f","GML",polOut + "/" + out_file])
-    os.remove(sarOut + "/" + in_file)
+for scene in newlist:
+    print("\n polygonizing " + scene + "\n")
+    out_tif = scene + ".tif"
+    out_gml = scene + ".gml"
+    subprocess.call([pyt,gdalMerge,'-o',sarOut + "/" + out_tif,sarOut + "/" + scene + "*"]
+    os.remove(sarOut + "/" + scene + "_*")                    
+    subprocess.call([pyt,gdalPol,sarOut + "/" + out_tif,"-f","GML",polOut + "/" + out_gml])
+    os.remove(sarOut + "/" + out_tif)
 
 print("\n********** polygonize completed!" + str(len(newlist))  + " watermasks processed\n********** Elapsed time: " + str(datetime.datetime.now()-t0) + "\n********** End of message\n")

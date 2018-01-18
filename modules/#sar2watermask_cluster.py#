@@ -74,6 +74,7 @@ for f in flist:
 
     size = product.getSceneRasterSize()
 
+    for tile in xrange()
     p_ul = Point(1000,0)
     p_ur = Point(size.width/2,0)
     p_ll = Point(1000,size.height/2)
