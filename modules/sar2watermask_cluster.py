@@ -16,7 +16,13 @@ from snappy import ProductIO
 from snappy import jpy
 from snappy import HashMap
 from snappy import Rectangle
-from getPaths import *
+
+###############################
+##############################
+from getPaths_testmode import *
+
+
+
 
 #############################################
 # MAKE SURE YOU SET THE NECESSARY RAM

@@ -20,14 +20,14 @@ proj = home['proj']
 scratch= home['scratch']
 
 
-sardir=scratch+"/s1a_scenes"
+sardir=scratch+"/test_dataset/s1a_scenes"
 sarIn=sardir+"/in"
 sarOut=sardir+"/out"
-polOut=scratch + "/watermasks"
+polOut=scratch + "/test_dataset/watermasks"
 
-MONGO_HOST = "141.89.96.184"
-MONGO_DB = "sar2watermask"
-MONGO_PORT = 27017
+#MONGO_HOST = "141.89.96.184"
+#MONGO_DB = "sar2watermask"
+#MONGO_PORT = 27017
 
 sys.path.insert(0, home['parameters'])
 from credentials import *
