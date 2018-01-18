@@ -55,7 +55,7 @@ status=0
 for f in flist:
     status=status+1
 
-    print("SCENE " + status + " of " + len(flist) + "\n\n")
+    print("SCENE " + str(status) + " of " + str(len(flist)) + "\n\n")
     
     print("3 begin reading product\n")
 
