@@ -22,9 +22,10 @@ newlist = list(set(newlist))
 
 for scene in newlist:
     print("\n polygonizing " + scene + "\n")
+    in_tif = glob.glob(sarOut + "/" + scene + "*.tif")
     out_tif = scene + ".tif"
     out_gml = scene + ".gml"
-    subprocess.call([pyt,gdalMerge,'-o',sarOut + "/" + out_tif,sarOut + "/" + scene + "*"]
+    subprocess.call([pyt,gdalMerge,'-o',sarOut + "/" + out_tif,' '.join(in_tif)])
     os.remove(sarOut + "/" + scene + "_*")                    
     subprocess.call([pyt,gdalPol,sarOut + "/" + out_tif,"-f","GML",polOut + "/" + out_gml])
     os.remove(sarOut + "/" + out_tif)
