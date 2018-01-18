@@ -62,13 +62,14 @@ geojson.dump(feat_col3,f)
 f.close()
 
 # merge all geojson to geopackage
-f0 = home['home']+'/0_latest.geojson'
-f1 = home['home']+'/1_month_ago.geojson'
-f2 = home['home']+'/2_month_ago.geojson'
-f3 = home['home']+'/3_month_ago.geojson'
+f0 = home['home']+'/watermaskVis/0_latest.geojson'
+f1 = home['home']+'/watermaskVis/1_month_ago.geojson'
+f2 = home['home']+'/watermaskVis/2_month_ago.geojson'
+f3 = home['home']+'/watermaskVis/3_month_ago.geojson'
 
-cmd = ['ogrmerge.py', '-single','-f', 'GPKG', '-o', 'last4month.gpkg', f0, f1, f2, f3]
-sp.call(cmd)
+### moved to crontab as bash script
+#cmd = ['ogrmerge.py', '-single','-f', 'GPKG', '-o', 'last4month.gpkg', f0, f1, f2, f3]
+#sp.call(cmd)
 
 if home['home']!='/home/riemer':
     server.stop()
