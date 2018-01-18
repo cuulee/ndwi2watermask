@@ -19,9 +19,18 @@ from snappy import Rectangle
 
 ###############################
 ##############################
-from getPaths_testmode import *
+### APPEND "_testmode" to the
+### following library name if
+### you intend to work on test
+### mode and not change 
+### anything on the 
+### production line
+###############################
+###############################
 
+from getPaths import *
 
+#############################
 
 
 #############################################
