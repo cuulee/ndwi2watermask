@@ -21,12 +21,15 @@ newlist = list(set(newlist))
 
 
 for scene in newlist:
-    print("\n polygonizing " + scene + "\n")
+    
+    print("\n merging mosaics in " + scene + "\n")
     in_tif = glob.glob(sarOut + "/" + scene + "*.tif")
     out_tif = scene + ".tif"
-    out_gml = scene + ".gml"
     subprocess.call([pyt,gdalMerge,'-o',sarOut + "/" + out_tif,' '.join(in_tif)])
     os.remove(sarOut + "/" + scene + "_*")                    
+
+    print("\n polygonizing " + scene + "\n")
+    out_gml = scene + ".gml"
     subprocess.call([pyt,gdalPol,sarOut + "/" + out_tif,"-f","GML",polOut + "/" + out_gml])
     os.remove(sarOut + "/" + out_tif)
 
