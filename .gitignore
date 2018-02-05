@@ -5,6 +5,11 @@
 # Sentinel data
 
 s1a_scenes/
+*.tif
+*.tif.aux.xml
+*.gml
+*.xsd
+# auxdata
 
 # auxdata
 
