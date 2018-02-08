@@ -5,6 +5,10 @@
 # Sentinel data
 
 s1a_scenes/
+*.img
+*.jp2
+*.jp2.aux.xml
+*.img.aux.xml
 *.tif
 *.tif.aux.xml
 *.gml
