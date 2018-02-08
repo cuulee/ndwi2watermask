@@ -3,10 +3,7 @@ import os
 import subprocess
 from getPaths import *
 
-<<<<<<< HEAD
-=======
 
->>>>>>> 6c0f096b784b02c5f83b6a6125e0c31892aac61d
 items=os.listdir(s2aIn)
 
 newlist = []
