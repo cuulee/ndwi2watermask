@@ -1,5 +1,11 @@
+import zipfile
+import subprocess
+import os
+from getPaths import *
+import re
+
 def unzipJp2(zipfl):
-    sceneZip = zipfile.ZipFile(s2aIn + '/' + zipfl)
+    sceneZip = zipfile.ZipFile(zipfl)
     scenefls = sceneZip.namelist()
     sceneJp2=[]
     for line in scenefls:
@@ -10,32 +16,57 @@ def unzipJp2(zipfl):
     sceneZip.close()
     return(sceneJp2)
 
-def getDirFromAbsPath(path):
-    banddir=path[0].split('/')
-    banddir= banddir[:-1]
-    banddir='/'.join(banddir)
-    return(banddir)
+def getParentDir(path):
+    parentdir=path.split('/')
+    parentdir= parentdir[:-1]
+    parentdir='/'.join(parentdir)
+    return(parentdir)
 
-
-def doGdalbuildvrt(sceneJp2):
+def getBandPath(sceneJp2):
     bandpth=[]
     for jp2 in sceneJp2:
         bandpth.append(s2aIn+ '/' + jp2)
+    return(bandpth)
 
-    banddir=getDirFromAbsPath(bandpth[0])
+def getBandDir(sceneJp2):
+    bandpth=getBandPath(sceneJp2)
+    banddir=getParentDir(bandpth[0])
+    return(banddir)
+
+def getAngleDir(sceneJp2):
+    banddir=getBandDir(sceneJp2)
+    xmldir=getParentDir(banddir)
+    return(xmldir)
+
+
+
+def runGdalbuildvrt(sceneJp2):
+    bandpth=getBandPath(sceneJp2)
+    banddir=getBandDir(sceneJp2)
 
     cmd=[gdalBuildvrt,
         "-resolution",
         "user",
         "-tr",
-        "200",
-        "200",
+        "20",
+        "20",
         "-separate",
         banddir + "/" + "allbands.vrt"] + bandpth
 
     exitFlag=subprocess.call(cmd)
     return(exitFlag)
 
+def runFmaskMakeAngles(sceneJp2):
+    angledir=getAngleDir(sceneJp2)
+    banddir=getBandDir(sceneJp2)
+    cmd=[fmaskMakeAngles,
+        "-i",
+        angledir + '/*.xml',
+        "-0",
+        bandir + '/angles.img']
 
-fmask_sentinel2makeAnglesImage.py -i ../*.xml -o angles.img
-fmaskMakeAngles
+    exitFlag=subprocess.call(cmd)
+    return(exitFlag)
+
+#fmask_sentinel2makeAnglesImage.py -i ../*.xml -o angles.img
+#fmaskMakeAngles

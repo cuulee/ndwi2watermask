@@ -1,23 +1,24 @@
 
 import os
-import subprocess
 from getPaths import *
-
-import zipfile
-
+from defCloudMask import *
 import re
 
 #### list zip files
 
 zipfls=[]
 items=os.listdir(s2aIn)
+item=items[1]
+
+
 
 for item in items:
+    item=s2aIn + '/' + item
     if re.search('^.*\.zip$', item) :
         zipfls.append(item)
         sceneJp2 = unzipJp2(item)
-        doGdalbuildvrt(sceneJp2)
-        
+        runGdalbuildvrt(sceneJp2)
+        fmaskMakeAngles(sceneJp2)
 
 fmask_sentinel2makeAnglesImage.py -i ../*.xml -o angles.img
 fmask_sentinel2Stacked.py -a allbands.vrt -z angles.img -o cloud.img
