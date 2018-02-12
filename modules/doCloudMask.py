@@ -8,9 +8,6 @@ import re
 
 zipfls=[]
 items=os.listdir(pths.s2aIn)
-item=items[1]
-
-
 
 for item in items:
     item=pths.s2aIn + '/' + item
