@@ -52,8 +52,8 @@ def runGdalbuildvrt(sceneJp2):
         "20",
         "-separate",
         banddir + "/" + "allbands.vrt"] + bandpth
-
-    exitFlag=subprocess.call(cmd)
+    cmd=" ".join(cmd)
+    exitFlag=subprocess.call(cmd,shell=True)
     return(exitFlag)
 
 def runFmaskMakeAngles(sceneJp2):
@@ -62,11 +62,26 @@ def runFmaskMakeAngles(sceneJp2):
     cmd=[fmaskMakeAngles,
         "-i",
         angledir + '/*.xml',
-        "-0",
-        bandir + '/angles.img']
-
-    exitFlag=subprocess.call(cmd)
+        "-o",
+        banddir + '/angles.img']
+    cmd=" ".join(cmd)
+    exitFlag=subprocess.call(cmd,shell=True)
     return(exitFlag)
 
 #fmask_sentinel2makeAnglesImage.py -i ../*.xml -o angles.img
 #fmaskMakeAngles
+
+def runFmaskStack(sceneJp2):
+    banddir=getBandDir(sceneJp2)
+    cmd = [fmaskStack,
+        "-a",
+        banddir + "/allbands.vrt",
+        "-z",
+        banddir + "/angles.img",
+        "-o",
+        banddir + "/cloud.img"]
+    cmd=" ".join(cmd)
+    exitFlag=subprocess.call(cmd,shell=True)
+    return(exitFlag)
+
+#    fmask_sentinel2Stacked.py -a allbands.vrt -z angles.img -o cloud.img
