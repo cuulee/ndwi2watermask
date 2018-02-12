@@ -10,9 +10,9 @@ def unzipJp2(zipfl):
     sceneJp2=[]
     for line in scenefls:
         if re.search('.*IMG_DATA.*_B[0-9,A]{2}.*.jp2', line) :
-            if not os.path.isfile(s2aIn + '/' + line):
-                sceneZip.extract(line,s2aIn)
             sceneJp2.append(line)
+        if not os.path.isfile(s2aIn + '/' + line):
+            sceneZip.extract(line,s2aIn)
     sceneZip.close()
     return(sceneJp2)
 
