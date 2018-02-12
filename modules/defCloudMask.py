@@ -42,7 +42,7 @@ def runGdalbuildvrt(sceneJp2):
     bandpth=getBandPath(sceneJp2)
     banddir=getBandDir(sceneJp2)
 
-    cmd=[gdalBuildvrt,
+    cmd=[pths.gdalBuildvrt,
         "-resolution",
         "user",
         "-tr",
@@ -57,7 +57,7 @@ def runGdalbuildvrt(sceneJp2):
 def runFmaskMakeAngles(sceneJp2):
     angledir=getAngleDir(sceneJp2)
     banddir=getBandDir(sceneJp2)
-    cmd=[fmaskMakeAngles,
+    cmd=[pths.fmaskMakeAngles,
         "-i",
         angledir + '/*.xml',
         "-o",
@@ -71,7 +71,7 @@ def runFmaskMakeAngles(sceneJp2):
 
 def runFmaskStack(sceneJp2):
     banddir=getBandDir(sceneJp2)
-    cmd = [fmaskStack,
+    cmd = [pths.fmaskStack,
         "-a",
         banddir + "/allbands.vrt",
         "-z",
