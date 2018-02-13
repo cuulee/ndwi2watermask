@@ -1,13 +1,28 @@
-### load dataset
 import rasterio as rio
 from rasterio.windows import Window
+
+
+import modules.getPaths as pths
 
 import matplotlib.pyplot as plt
 import numpy as np
 import subprocess
 from skimage.filters import threshold_otsu, threshold_local
-file_clouds = '/home/delgado/scratch/s2a_scenes/in/S2A_MSIL1C_20170728T130251_N0205_R095_T24MUV_20170728T130248.SAFE/GRANULE/L1C_T24MUV_A010960_20170728T130248/IMG_DATA/cloud.img'
-p3 = '/home/delgado/scratch/s2a_scenes/in/S2A_MSIL1C_20170728T130251_N0205_R095_T24MUV_20170728T130248.SAFE/GRANULE/L1C_T24MUV_A010960_20170728T130248/IMG_DATA/T24MUV_20170728T130251_B03.jp2'
+from defCloudMask import unzipJp2, getBandDir
+import re
+
+zipfls=[]
+items=os.listdir(pths.s2aIn)
+
+for item in items:
+    item=pths.s2aIn + '/' + item
+    if re.search('^.*\.zip$', item) :
+        zipfls.append(item)
+        sceneJp2 = unzipJp2(item)
+
+    banddir = getBandDir(sceneJp2)
+    file_clouds = banddir + '/cloud.img'
+p3 = banddir + '/*B03.jp2'
 p8 = '/home/delgado/scratch/s2a_scenes/in/S2A_MSIL1C_20170728T130251_N0205_R095_T24MUV_20170728T130248.SAFE/GRANULE/L1C_T24MUV_A010960_20170728T130248/IMG_DATA/T24MUV_20170728T130251_B08.jp2'
 
 
