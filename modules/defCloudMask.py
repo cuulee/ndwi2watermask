@@ -5,6 +5,7 @@ import getPaths as pths
 import re
 from rasterio.warp import reproject,Resampling
 from affine import Affine
+import rasterio as rio
 
 def unzipJp2(zipfl):
     sceneZip = zipfile.ZipFile(zipfl)
