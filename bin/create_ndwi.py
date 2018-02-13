@@ -42,14 +42,8 @@ profile.update(dtype=rio.uint8,count=1)
 
 NDWI = (band3-band8)/(band3+band8)
 
-with rio.open(banddir + 'ndwi.img', 'w', **profile) as dst:
-    dst.write(NDWI.astype(rio.float64), 1)
-
-
 ###### should be between 0 and 1 !!!
-ndwi = NDWI[not clouds_bin]>0.5
+ndwi = NDWI[not clouds_bin]
 
-fileName='example-ndwi_manual'
-
-with rio.open(fileName+'.jp2', 'w', **profile) as dst:
-    dst.write(ndwi.astype(rio.uint8), 1)
+with rio.open(banddir + 'ndwi.img', 'w', **profile) as dst:
+    dst.write(ndwi.astype(rio.float64), 1)

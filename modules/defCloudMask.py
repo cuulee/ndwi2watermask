@@ -3,6 +3,8 @@ import subprocess
 import os
 import getPaths as pths
 import re
+from rasterio.warp import reproject,Resampling
+from affine import Affine
 
 def unzipJp2(zipfl):
     sceneZip = zipfile.ZipFile(zipfl)
@@ -83,3 +85,20 @@ def runFmaskStack(sceneJp2):
     return(exitFlag)
 
 #    fmask_sentinel2Stacked.py -a allbands.vrt -z angles.img -o cloud.img
+
+def interpolate_clouds_to_10m(file_clouds):
+    dataset_clouds = rio.open(file_clouds)
+    clouds = dataset_clouds.read(1)
+    clouds10 = np.empty(shape=(int(round(clouds.shape[0] * 2)),
+        int(round(clouds.shape[1] * 2))))
+
+    aff = dataset_clouds.transform
+    newaff = Affine(aff[0] / 2, aff[1], aff[2],aff[3], aff[4] / 2, aff[5])
+    reproject(clouds, clouds10,
+        src_transform = aff,
+        dst_transform = newaff,
+        src_crs = dataset_clouds.crs,
+        dst_crs = dataset_clouds.crs,
+        resampling = Resampling.nearest)
+
+    return(clouds10)
