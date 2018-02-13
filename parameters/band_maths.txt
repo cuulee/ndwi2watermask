@@ -1,1 +1,0 @@
-if Sigma0_VV==0 then NaN else if Sigma0_VV<2E-2 then 255 else 0

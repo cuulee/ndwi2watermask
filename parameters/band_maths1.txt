@@ -1,1 +1,0 @@
-if Sigma0_VV<2.21E-2 then 255 else 0
