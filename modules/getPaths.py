@@ -3,9 +3,8 @@ import sys
 
 home = {
     'home' : expanduser("~"),
-    'proj' : expanduser("~") + '/proj/sar2watermask',
-    'auxdata' : expanduser("~") + '/proj/sar2watermask/auxdata',
-    'parameters' : expanduser("~") + '/proj/sar2watermask/parameters'
+    'proj' : expanduser("~") + '/proj/ndwi2watermask',
+    'parameters' : expanduser("~") + '/proj/ndwi2watermask/parameters'
 }
 
 if expanduser("~")=='/home/delgado':
