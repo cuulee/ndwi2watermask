@@ -2,7 +2,7 @@ import os
 import modules.getPaths as pths
 import numpy as np
 from modules.defCloudMask import unzipJp2, getBandDir,interpolate_clouds_to_10m
-from modules.ndwi2watermask import ndwi_from_jp2
+from modules.ndwi import ndwi_from_jp2
 
 zipfls=[]
 items=os.listdir(pths.s2aIn)
