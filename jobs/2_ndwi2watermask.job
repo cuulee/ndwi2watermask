@@ -9,4 +9,4 @@
 
 source activate image
 
-python /users/stud09/martinsd/proj/ndwi2watermask/bin/ndwi2watermask.py
+python /users/stud09/martinsd/proj/ndwi2watermask
