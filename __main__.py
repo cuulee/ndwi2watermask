@@ -7,11 +7,13 @@ def main(args=None):
         args = sys.argv[1:]
 
     try:
-        n2w.ndwi2watermask()
+        #n2w.ndwi2watermask()
+        n2w.rmclouds()
+
         return 0
     except:
         return 1
 
 
 if __name__ == "__main__":
-    main()
+    print main()

@@ -1,4 +1,4 @@
-from cloudmask import getBandDir,interpolate_clouds_to_10m
+from modules.cloudmask import getBandDir,interpolate_clouds_to_10m
 import glob
 import rasterio as rio
 

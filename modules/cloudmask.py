@@ -1,7 +1,7 @@
 import zipfile
 import subprocess
 import os
-import getpaths as pths
+import modules.getpaths as pths
 import re
 from rasterio.warp import reproject,Resampling
 from affine import Affine
