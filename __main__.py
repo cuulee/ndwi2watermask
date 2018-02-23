@@ -7,8 +7,8 @@ def main(args=None):
         args = sys.argv[1:]
 
     try:
-        #n2w.ndwi2watermask()
-        n2w.rmclouds()
+        #n2w.rmclouds()
+        n2w.ndwi2watermask()
 
         return 0
     except:

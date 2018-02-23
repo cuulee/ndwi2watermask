@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -N test_rmclouds
+#PBS -N test_ndwi
 #PBS -M martinsd@uni-potsdam.de
 #PBS -j oe
 #PBS -l ncpus=1
