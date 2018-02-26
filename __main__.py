@@ -1,6 +1,6 @@
 import sys
-import bin.ndwi2watermask as n2w
-
+#import bin.ndwi2watermask as n2w
+import bin.getscenes as scenes
 def main(args=None):
     """The main routine."""
     if args is None:
@@ -8,8 +8,8 @@ def main(args=None):
 
     try:
         #n2w.rmclouds()
-        n2w.ndwi2watermask()
-
+        #n2w.ndwi2watermask()
+        scenes.getscenes()
         return 0
     except:
         return 1
