@@ -21,7 +21,7 @@ def ndwi_from_jp2(sceneJp2):
     band3 = band3.astype(float)
     print('debugging 4: band 3 opened and type set\n')
 
-    dataset8 = rio.open(p8)
+    dataset8 = rio.open(p8[0])
     band8 = dataset8.read(1)
     band8 = band8.astype(float)
     print('debugging 5: band 8 opened and type set\n')
