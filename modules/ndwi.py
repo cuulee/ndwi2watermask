@@ -1,6 +1,11 @@
 from modules.cloudmask import getBandDir,interpolate_clouds_to_10m
 import glob
 import rasterio as rio
+import zipfile
+import os
+import modules.getpaths as pths
+import numpy as np
+import re
 
 def ndwi_from_jp2(sceneJp2):
     banddir = getBandDir(sceneJp2)
@@ -39,3 +44,16 @@ def ndwi_from_jp2(sceneJp2):
     with rio.open(banddir + 'ndwi.img', 'w', **profile) as dst:
         dst.write(ndwi.astype(rio.uint8), 1)
     #dst.write(ndwi.astype(rio.float64), 1)
+
+
+def ndwi2watermask():
+    print("Executing ndwi2watermask():")
+    zipfls=[]
+    items=os.listdir(pths.s2aIn)
+
+    for item in items:
+        item=pths.s2aIn + '/' + item
+        if re.search('^.*\.zip$', item) :
+            zipfls.append(item)
+            sceneJp2 = unzipJp2(item)
+            ndwi_from_jp2(sceneJp2)

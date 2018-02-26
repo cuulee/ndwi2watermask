@@ -1,10 +1,9 @@
 import os
 import modules.getpaths as pths
 import numpy as np
-from modules.cloudmask import unzipJp2, getBandDir,runGdalbuildvrt,runFmaskMakeAngles,runFmaskStack
+from modules.cloudmask import unzipJp2,runGdalbuildvrt,runFmaskMakeAngles,runFmaskStack
 from modules.ndwi import ndwi_from_jp2
 import re
-
 
 def ndwi2watermask():
     print("Executing ndwi2watermask():")
