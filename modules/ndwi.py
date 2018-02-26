@@ -8,7 +8,7 @@ def ndwi_from_jp2(sceneJp2):
     print('debugging 1: '+banddir+'\n')
     p3 = glob.glob(banddir + '/*B03.jp2')
     p8 = glob.glob(banddir + '/*B08.jp2')
-    print('debugging 2: '+p3+'\n')
+    print('debugging 2: getting paths to bands \n')
 
     #### add clause "in case there is a cloud file"
     clouds10 = interpolate_clouds_to_10m(file_clouds)
