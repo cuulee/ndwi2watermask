@@ -23,6 +23,6 @@ def getscenes():
                             platformname='Sentinel-2',
                             cloudcoverpercentage = (0, 30))
 
-
     # download all results from the search
+    #s2aIn = '/home/delgado/Documents/tmp' # in case you are just testing
     api.download_all(products,directory_path=s2aIn)

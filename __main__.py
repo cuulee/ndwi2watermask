@@ -1,27 +1,21 @@
 import sys
-import bin.getscenes as scenes
-
-choices = {'a': 1, 'b': 2}
-choices.get('r','default')
 
 def main():
     """The main routine."""
 
     switcher = {
-    "rmclouds" : callrmclouds,
-    "getscenes" : callgetscenes,
-    "ndwi" : callndwi
-    }
+        "rmclouds" : callrmclouds,
+        "getscenes" : callgetscenes,
+        "ndwi" : callndwi
+        }
 
-    if args is None:
+    if sys.argv[1] is None:
         print("an argument is needed, for example: cleanup or get_scenes")
     else:
-        args = sys.argv[1]
-
-
+        switcher.get(sys.argv[1],'please provide one of rmclouds, getscenes or ndwi')()
 
 def callgetscenes():
-    import modules.cloudmask as clouds
+    import modules.scenes as scenes
     try:
         scenes.getscenes()
         return 0
@@ -43,6 +37,7 @@ def callndwi():
         return 0
     except:
         return 1
+
 
 
 if __name__ == "__main__":
