@@ -7,6 +7,6 @@
 #PBS -l walltime=12:00:00
 #PBS -l mem=20gb
 
-source activate image
-
-python /users/stud09/martinsd/proj/ndwi2watermask
+source activate raster
+export LD_LIBRARY_PATH=""
+python /users/stud09/martinsd/proj/ndwi2watermask "ndwi"

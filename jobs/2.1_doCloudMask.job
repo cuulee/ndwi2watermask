@@ -8,8 +8,6 @@
 #PBS -l mem=20gb
 
 
-source activate fmask
-
+source activate raster
 export LD_LIBRARY_PATH=""
-
-python /users/stud09/martinsd/proj/sar2watermask/modules/doCloudMask.py
+python /users/stud09/martinsd/proj/ndwi2watermask "rmclouds"
