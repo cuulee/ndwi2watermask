@@ -35,11 +35,6 @@ def unzipJp2(zipfl):
     sceneZip.close()
     return(sceneJp2)
 
-def getSceneName(path):
-    path="/home/delgado/xxx"
-    scenename=path.split('/')
-    return(scenename[-1])
-
 def getParentDir(path):
     parentdir=path.split('/')
     parentdir= parentdir[:-1]
