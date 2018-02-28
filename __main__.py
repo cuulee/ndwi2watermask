@@ -5,21 +5,21 @@ def main():
 
     if sys.argv[1] is None:
         print("an argument is needed, for example: cleanup or get_scenes")
-    elif sys.argv[1] is "getscenes":
+    elif sys.argv[1]=="getscenes":
         import modules.scenes as scenes
         try:
             scenes.getscenes()
             return 0
         except:
             return 1
-    elif sys.argv[1] is "rmclouds":
+    elif sys.argv[1]=="rmclouds":
         import modules.cloudmask as clouds
         try:
             clouds.rmclouds()
             return 0
         except:
             return 1
-    elif sys.argv[1] is "ndwi":
+    elif sys.argv[1]=="ndwi":
         import modules.ndwi as n2w
         try:
             n2w.ndwi2watermask()
