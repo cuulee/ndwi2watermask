@@ -10,19 +10,16 @@ import rasterio as rio
 
 def rmclouds():
     print("Executing rmclouds():")
-    zipfls=[]
     items=os.listdir(pths.s2aIn)
-
     for item in items:
         item=pths.s2aIn + '/' + item
         if re.search('^.*\.zip$', item) :
-            zipfls.append(item)
             sceneJp2 = unzipJp2(item)
             runGdalbuildvrt(sceneJp2)
             runFmaskMakeAngles(sceneJp2)
             runFmaskStack(sceneJp2)
 
-
+scenefls
 def unzipJp2(zipfl):
     sceneZip = zipfile.ZipFile(zipfl)
     scenefls = sceneZip.namelist()
@@ -70,7 +67,8 @@ def runGdalbuildvrt(sceneJp2):
         "-separate",
         banddir + "/" + "allbands.vrt"] + bandpth
     cmd=" ".join(cmd)
-    exitFlag=subprocess.call(cmd,shell=True)
+    if not os.path.isfile(banddir + "/" + "allbands.vrt"):
+        exitFlag=subprocess.call(cmd,shell=True)
     return(exitFlag)
 
 def runFmaskMakeAngles(sceneJp2):
@@ -82,7 +80,8 @@ def runFmaskMakeAngles(sceneJp2):
         "-o",
         banddir + '/angles.img']
     cmd=" ".join(cmd)
-    exitFlag=subprocess.call(cmd,shell=True)
+    if not os.path.isfile(banddir + '/angles.img'):
+        exitFlag=subprocess.call(cmd,shell=True)
     return(exitFlag)
 
 #fmask_sentinel2makeAnglesImage.py -i ../*.xml -o angles.img
@@ -98,6 +97,9 @@ def runFmaskStack(sceneJp2):
         "-o",
         banddir + "/cloud.img"]
     cmd=" ".join(cmd)
+    if not os.path.isfile(banddir + '/cloud.img'):
+        exitFlag=subprocess.call(cmd,shell=True)
+
     exitFlag=subprocess.call(cmd,shell=True)
     return(exitFlag)
 
