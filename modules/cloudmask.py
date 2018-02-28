@@ -19,6 +19,10 @@ def rmclouds():
             runFmaskMakeAngles(sceneJp2)
             runFmaskStack(sceneJp2)
 
+<<<<<<< HEAD
+=======
+scenefls
+>>>>>>> 09cd0b70818ee87ac30ea11022b5011401a68d48
 def unzipJp2(zipfl):
     sceneZip = zipfile.ZipFile(zipfl)
     scenefls = sceneZip.namelist()
