@@ -41,7 +41,7 @@ def ndwi_from_jp2(sceneJp2):
     ndwi = NDWI[not clouds_bin] > 0.5
 
     print('debugging 7: writing out\n')
-    with rio.open(banddir + 'ndwi.img', 'w', **profile) as dst:
+    with rio.open(banddir + '.tif', 'w', **profile) as dst:
         dst.write(ndwi.astype(rio.uint8), 1)
     #dst.write(ndwi.astype(rio.float64), 1)
 
