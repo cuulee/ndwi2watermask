@@ -49,14 +49,15 @@ def ndwi_from_jp2(sceneJp2):
     profile.update(dtype=rio.int8,count=1)
     print('debugging 6: profile of ndwi set\n')
 
+    print('debugging 7: avoiding zeros in the denominator')
+    notzeros= (band3+band8 != 0)
 
-
-    NDWI = (band3-band8)/(band3+band8)
+    NDWI = (band3[notzeros]-band8[notzeros])/(band3[notzeros]+band8[notzeros])
 
     ###### should be between 0 and 1 !!!
     ndwi = NDWI[not clouds_bin] > 0.5
 
-    print('debugging 7: writing out\n')
+    print('debugging 8: writing out\n')
     with rio.open(pths.polOut + "/" + scene + '.tif', 'w', **profile) as dst:
         dst.write(ndwi.astype(rio.int8), 1)
     #dst.write(ndwi.astype(rio.float64), 1)
