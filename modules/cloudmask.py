@@ -14,6 +14,7 @@ def rmclouds():
     for item in items:
         if re.search('^.*\.zip$', item) :
             print('unzipping' + item + '\n')
+            item = pths.s2aIn + '/' + item
             sceneJp2 = unzipJp2(item)
             print('building vrt\n')
             runGdalbuildvrt(sceneJp2)
