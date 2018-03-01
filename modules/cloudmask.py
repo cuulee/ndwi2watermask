@@ -13,11 +13,15 @@ def rmclouds():
     items=os.listdir(pths.s2aIn)
     for item in items:
         if re.search('^.*\.zip$', item) :
-            print('unzipping, building vrt, making angles, "fmasking" ' + item)
+            print('unzipping' + item + '\n')
             sceneJp2 = unzipJp2(item)
+            print('building vrt\n')
             runGdalbuildvrt(sceneJp2)
+            print('fmask: making angles\n')
             runFmaskMakeAngles(sceneJp2)
+            print('fmask: generating cloud mask\n')
             runFmaskStack(sceneJp2)
+            print('fmask: finished ' + item+'\n')
 
 def unzipJp2(zipfl):
     sceneZip = zipfile.ZipFile(zipfl)
