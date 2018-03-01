@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -N 1.1_doCloudMask
+#PBS -N 2.1_doCloudMask
 #PBS -M martinsd@uni-potsdam.de
 #PBS -j oe
 #PBS -l ncpus=1
