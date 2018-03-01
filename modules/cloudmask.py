@@ -12,8 +12,8 @@ def rmclouds():
     print("Executing rmclouds():")
     items=os.listdir(pths.s2aIn)
     for item in items:
-        item=pths.s2aIn + '/' + item
         if re.search('^.*\.zip$', item) :
+            print('unzipping, building vrt, making angles, "fmasking" ' + item)
             sceneJp2 = unzipJp2(item)
             runGdalbuildvrt(sceneJp2)
             runFmaskMakeAngles(sceneJp2)
@@ -68,6 +68,8 @@ def runGdalbuildvrt(sceneJp2):
     cmd=" ".join(cmd)
     if not os.path.isfile(banddir + "/" + "allbands.vrt"):
         exitFlag=subprocess.call(cmd,shell=True)
+    else:
+        exitFlag="allbands.vrt already exists"
     return(exitFlag)
 
 def runFmaskMakeAngles(sceneJp2):
@@ -81,6 +83,8 @@ def runFmaskMakeAngles(sceneJp2):
     cmd=" ".join(cmd)
     if not os.path.isfile(banddir + '/angles.img'):
         exitFlag=subprocess.call(cmd,shell=True)
+    else:
+        exitFlag="angles.img already exists"
     return(exitFlag)
 
 #fmask_sentinel2makeAnglesImage.py -i ../*.xml -o angles.img
@@ -98,8 +102,8 @@ def runFmaskStack(sceneJp2):
     cmd=" ".join(cmd)
     if not os.path.isfile(banddir + '/cloud.img'):
         exitFlag=subprocess.call(cmd,shell=True)
-
-    exitFlag=subprocess.call(cmd,shell=True)
+    else:
+        exitFlag="cloud.img already exists"
     return(exitFlag)
 
 #    fmask_sentinel2Stacked.py -a allbands.vrt -z angles.img -o cloud.img
