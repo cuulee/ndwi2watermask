@@ -1,4 +1,4 @@
-from modules.cloudmask import getBandDir,interpolate_clouds_to_10m,unzipJp2,rmclouds
+from modules.cloudmask import *
 import glob
 import rasterio as rio
 import zipfile
@@ -73,4 +73,12 @@ def ndwi2watermask():
         item=pths.s2aIn + '/' + item
         if re.search('^.*\.zip$', item):
             sceneJp2 = unzipJp2(item)
+            print('building vrt\n')
+            runGdalbuildvrt(sceneJp2)
+            print('fmask: making angles\n')
+            runFmaskMakeAngles(sceneJp2)
+            print('fmask: generating cloud mask\n')
+            runFmaskStack(sceneJp2)
+            print('fmask: finished ' + item+'\n')
+            print('creating ndwi: ' + item+'\n')
             ndwi_from_jp2(sceneJp2)
