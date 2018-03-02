@@ -29,6 +29,15 @@ def main():
         except:
             sys.stderr.write('ERROR: %s\n' % str(err))
             return 1
+    elif sys.argv[1]=="test":
+        #### tests environment
+        import modules.ndwi as n2w
+        try:
+            n2w.ndwi2watermask()
+            return 0
+        except:
+            sys.stderr.write('ERROR: %s\n' % str(err))
+            return 1
     else:
         print('please provide one of "rmclouds", "getscenes" or "ndwi"')
 
