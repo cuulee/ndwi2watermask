@@ -42,7 +42,7 @@ def ndwi_from_jp2(sceneJp2):
     print('debugging 5: band 8 opened and type set\n')
 
     profile = dataset3.profile
-    profile.update(dtype=rio.float,count=1)
+    profile.update(dtype=rio.float32,count=1)
     print('debugging 6: profile of ndwi set\n')
 
     #### there should not be any zeros in the denominator, because the products are unsigned int!
