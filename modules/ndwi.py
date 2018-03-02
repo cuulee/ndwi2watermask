@@ -21,16 +21,7 @@ def ndwi_from_jp2(sceneJp2):
         clouds10 = interpolate_clouds_to_10m(file_clouds)
     else:
         return('please run main with argument "rmclouds"')
-
-    aff = dataset_clouds.transform
-    newaff = Affine(aff[0] / 2, aff[1], aff[2],aff[3], aff[4] / 2, aff[5])
-    reproject(clouds, clouds10,
-        src_transform = aff,
-        dst_transform = newaff,
-        src_crs = dataset_clouds.crs,
-        dst_crs = dataset_clouds.crs,
-        resampling = Resampling.nearest)
-
+    
     print('debugging 3: clouds 10 finished\n')
 
     clouds_bin = (clouds10==2) | (clouds10==3)
@@ -58,7 +49,7 @@ def ndwi_from_jp2(sceneJp2):
     ndwi = NDWI[not clouds_bin] > 0.5
 
     print('debugging 8: writing out\n')
-    with rio.open(pths.polOut + "/" + scene + '.tif', 'w', **profile) as dst:
+    with rio.open(pths.s2aOut + "/" + scene + '.tif', 'w', **profile) as dst:
         dst.write(ndwi.astype(rio.int8), 1)
     #dst.write(ndwi.astype(rio.float64), 1)
 
@@ -66,9 +57,7 @@ def ndwi_from_jp2(sceneJp2):
 def ndwi2watermask():
     print("Executing ndwi2watermask():")
     items=os.listdir(pths.s2aIn)
-    item=items[0]
-    items[0]
-    item
+    item=items[12]
     for item in items:
         item=pths.s2aIn + '/' + item
         if re.search('^.*\.zip$', item):
