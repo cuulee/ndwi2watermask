@@ -10,7 +10,7 @@ def main():
         try:
             scenes.getscenes()
             return 0
-        except:
+        except Exception, err:
             sys.stderr.write('ERROR: %s\n' % str(err))
             return 1
     elif sys.argv[1]=="rmclouds":
@@ -18,7 +18,7 @@ def main():
         try:
             clouds.rmclouds()
             return 0
-        except:
+        except Exception, err:
             sys.stderr.write('ERROR: %s\n' % str(err))
             return 1
     elif sys.argv[1]=="ndwi":
@@ -26,7 +26,7 @@ def main():
         try:
             n2w.ndwi2watermask()
             return 0
-        except:
+        except Exception, err:
             sys.stderr.write('ERROR: %s\n' % str(err))
             return 1
     elif sys.argv[1]=="test":
@@ -35,7 +35,7 @@ def main():
         try:
             n2w.ndwi2watermask()
             return 0
-        except:
+        except Exception, err:
             sys.stderr.write('ERROR: %s\n' % str(err))
             return 1
     else:
