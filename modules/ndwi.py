@@ -51,10 +51,11 @@ def ndwi_from_jp2(sceneJp2):
 
     NDWI = (band3-band8)/(band3+band8)
     ndwi = NDWI[np.logical_not(clouds_bool)] > 0
+    ndwi=ndwi*1
 
     print('debugging 8: writing out\n')
     with rio.open(pths.s2aOut + "/" + scene + '.tif', 'w', **profile) as dst:
-        dst.write(ndwi.astype(rio.int16), 1)
+        dst.write(ndwi, 1)
     #dst.write(ndwi.astype(rio.float64), 1)
 
 
