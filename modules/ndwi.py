@@ -21,13 +21,17 @@ def ndwi_from_jp2(sceneJp2):
         clouds10 = interpolate_clouds_to_10m(file_clouds)
     else:
         return('please run main with argument "rmclouds"')
-    
+
     print('debugging 3: clouds 10 finished\n')
 
     clouds_bin = (clouds10==2) | (clouds10==3)
 
+    ### the product is provided as a uint16.
+    ### usually one could divide by 1000 to get the real TOA values,
+    ### but since we are interested in the index, there is no need for that
     dataset3 = rio.open(p3[0])
     band3 = dataset3.read(1)
+    ### here we convert it o float so the division will work.
     band3 = band3.astype(float)
     print('debugging 4: band 3 opened and type set\n')
 
@@ -37,20 +41,20 @@ def ndwi_from_jp2(sceneJp2):
     print('debugging 5: band 8 opened and type set\n')
 
     profile = dataset3.profile
-    profile.update(dtype=rio.int8,count=1)
+    profile.update(dtype=rio.float,count=1)
     print('debugging 6: profile of ndwi set\n')
 
-    print('debugging 7: avoiding zeros in the denominator')
-    notzeros= (band3+band8 != 0)
+    #### there should not be any zeros in the denominator, because the products are unsigned int!
+    #print('debugging 7: avoiding zeros in the denominator')
+    #notzeros= (band3+band8 != 0)
 
-    NDWI = (band3[notzeros]-band8[notzeros])/(band3[notzeros]+band8[notzeros])
+    NDWI = (band3-band8)/(band3+band8)
 
-    ###### should be between 0 and 1 !!!
-    ndwi = NDWI[not clouds_bin] > 0.5
+    ndwi = NDWI[not clouds_bin] > 0
 
     print('debugging 8: writing out\n')
     with rio.open(pths.s2aOut + "/" + scene + '.tif', 'w', **profile) as dst:
-        dst.write(ndwi.astype(rio.int8), 1)
+        dst.write(ndwi.astype(rio.int16), 1)
     #dst.write(ndwi.astype(rio.float64), 1)
 
 
@@ -59,6 +63,7 @@ def ndwi2watermask():
     items=os.listdir(pths.s2aIn)
     item=items[12]
     for item in items:
+        sceneJp2
         item=pths.s2aIn + '/' + item
         if re.search('^.*\.zip$', item):
             sceneJp2 = unzipJp2(item)
