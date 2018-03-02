@@ -18,10 +18,10 @@ def ndwi_from_jp2(sceneJp2):
     print('debugging 2: getting paths to bands \n')
 
     #### add clause "in case there is a cloud file"
-    if os.path.isfile(file_clouds):
+    try:
         clouds10 = interpolate_clouds_to_10m(file_clouds)
-    else:
-        return('please run main with argument "rmclouds"')
+    except:
+        sys.stderr.write('ERROR: %s\n' % str(err))
 
     print('debugging 3: clouds 10 finished\n')
 
