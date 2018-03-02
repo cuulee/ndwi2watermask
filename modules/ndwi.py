@@ -11,6 +11,7 @@ def ndwi_from_jp2(sceneJp2):
     scene=sceneJp2[0].split(".SAFE/GRANULE")[0]
     banddir = getBandDir(sceneJp2)
     file_clouds = banddir + '/cloud.img'
+    file_clouds
     print('debugging 1: '+banddir+'\n')
     p3 = glob.glob(banddir + '/*B03.jp2')
     p8 = glob.glob(banddir + '/*B08.jp2')
@@ -61,9 +62,7 @@ def ndwi_from_jp2(sceneJp2):
 def ndwi2watermask():
     print("Executing ndwi2watermask():")
     items=os.listdir(pths.s2aIn)
-    item=items[12]
     for item in items:
-        sceneJp2
         item=pths.s2aIn + '/' + item
         if re.search('^.*\.zip$', item):
             sceneJp2 = unzipJp2(item)
