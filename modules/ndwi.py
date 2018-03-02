@@ -58,7 +58,7 @@ def ndwi_from_jp2(sceneJp2):
     ndwi = NDWI[not clouds_bin] > 0.5
 
     print('debugging 8: writing out\n')
-    with rio.open(pths.polOut + "/" + scene + '.tif', 'w', **profile) as dst:
+    with rio.open(pths.s2aOut + "/" + scene + '.tif', 'w', **profile) as dst:
         dst.write(ndwi.astype(rio.int8), 1)
     #dst.write(ndwi.astype(rio.float64), 1)
 
@@ -66,9 +66,7 @@ def ndwi_from_jp2(sceneJp2):
 def ndwi2watermask():
     print("Executing ndwi2watermask():")
     items=os.listdir(pths.s2aIn)
-    item=items[0]
-    items[0]
-    item
+    item=items[12]
     for item in items:
         item=pths.s2aIn + '/' + item
         if re.search('^.*\.zip$', item):
