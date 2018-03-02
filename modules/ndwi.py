@@ -43,15 +43,20 @@ def ndwi_from_jp2(sceneJp2):
 
     profile = dataset3.profile
     profile.update(dtype=rio.float32,count=1)
-    print('debugging 6: profile of ndwi set\n')
+    print('debugging 6: profile of ndwi set. calculating ndwi\n')
 
     #### there should not be any zeros in the denominator, because the products are unsigned int!
     #print('debugging 7: avoiding zeros in the denominator')
     #notzeros= (band3+band8 != 0)
 
     NDWI = (band3-band8)/(band3+band8)
+
+    print('filtering out clouds:\n')
+
     ndwi = NDWI[np.logical_not(clouds_bool)] > 0
-    ndwi=ndwi*1
+
+    print('potentially critical point: from boolean to int\n')
+    ndwi=ndwi.astype(int)
 
     print('debugging 8: writing out\n')
     with rio.open(pths.s2aOut + "/" + scene + '.tif', 'w', **profile) as dst:
