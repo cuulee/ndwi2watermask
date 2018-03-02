@@ -25,7 +25,7 @@ def ndwi_from_jp2(sceneJp2):
 
     print('debugging 3: clouds 10 finished\n')
 
-    clouds_bin = (clouds10==2) | (clouds10==3)
+    clouds_bool = (clouds10==2) | (clouds10==3)
 
     ### the product is provided as a uint16.
     ### usually one could divide by 1000 to get the real TOA values,
@@ -50,8 +50,7 @@ def ndwi_from_jp2(sceneJp2):
     #notzeros= (band3+band8 != 0)
 
     NDWI = (band3-band8)/(band3+band8)
-
-    ndwi = NDWI[not clouds_bin] > 0
+    ndwi = NDWI[np.logical_not(clouds_bool)] > 0
 
     print('debugging 8: writing out\n')
     with rio.open(pths.s2aOut + "/" + scene + '.tif', 'w', **profile) as dst:
