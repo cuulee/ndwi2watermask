@@ -51,19 +51,27 @@ def ndwi_from_jp2(sceneJp2):
 
     NDWI = (band3-band8)/(band3+band8)
 
-    print('ndwi shape:')
-    NDWI.shape
-    print('clouds_bool shape:')
-    clouds_bool.shape
+    print('ndwi shape:\n')
+    print(NDWI[1:5,1:5])
+    print(NDWI.shape)
+    print('clouds_bool shape:\n')
+    print(clouds_bool[1:5,1:5])
+    print(clouds_bool.shape)
 
     ndwi_bool = NDWI[np.logical_not(clouds_bool)] > 0
+    print('ndwi_bool shape:\n')
+    print(ndwi_bool[1:5,1:5])
+    print(ndwi_bool.shape)
 
     print('potentially critical point: from boolean to int\n')
     ndwi_int=ndwi_bool.astype('int16')
+    print('ndwi_int shape:\n')
+    print(ndwi_int[1:5,1:5])
+    print(ndwi_int.shape)
 
-    print('debugging 8: writing out\n')
-    with rio.open(pths.s2aOut + "/" + scene + '.tif', 'w',driver='GTiff',height=ndwi_int.shape[0], width=ndwi_int.shape[1],count=1,dtype=np.int16) as dst:
-        dst.write(ndwi_int, 1)
+#    print('debugging 8: writing out\n')
+#    with rio.open(pths.s2aOut + "/" + scene + '.tif', 'w',driver='GTiff',height=ndwi_int.shape[0], width=ndwi_int.shape[1],count=1,dtype=np.int16) as dst:
+#        dst.write(ndwi_int, 1)
     #dst.write(ndwi.astype(rio.float64), 1)
 
 
@@ -83,4 +91,17 @@ def ndwi2watermask():
             runFmaskStack(sceneJp2)
             print('fmask: finished ' + item+'\n')
             print('creating ndwi: ' + item+'\n')
+            ndwi_from_jp2(sceneJp2)
+
+
+
+
+def test_one_ndwi():
+    print("Executing ndwi2watermask():")
+    #items=os.listdir(pths.s2aIn)
+    items=['S2A_MSIL1C_20180223T130241_N0206_R095_T24MTT_20180223T192653.zip']
+    for item in items:
+        item=pths.s2aIn + '/' + item
+        if re.search('^.*\.zip$', item):
+            sceneJp2 = unzipJp2(item)
             ndwi_from_jp2(sceneJp2)
