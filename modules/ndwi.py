@@ -17,16 +17,6 @@ def ndwi_from_jp2(sceneJp2):
     p8 = glob.glob(banddir + '/*B08.jp2')
     print('debugging 2: getting paths to bands \n')
 
-    #### add clause "in case there is a cloud file"
-    try:
-        clouds10 = interpolate_clouds_to_10m(file_clouds)
-    except Exception, err:
-        sys.stderr.write('ERROR: %s\n' % str(err))
-
-    print('debugging 3: clouds 10 finished\n')
-
-    clouds_bool = (clouds10==2) | (clouds10==3)
-
     ### the product is provided as a uint16.
     ### usually one could divide by 1000 to get the real TOA values,
     ### but since we are interested in the index, there is no need for that
@@ -34,12 +24,22 @@ def ndwi_from_jp2(sceneJp2):
     band3 = dataset3.read(1)
     ### here we convert it o float so the division will work.
     band3 = band3.astype(float)
-    print('debugging 4: band 3 opened and type set\n')
+    print('debugging 3: band 3 opened and type set\n')
 
     dataset8 = rio.open(p8[0])
     band8 = dataset8.read(1)
     band8 = band8.astype(float)
-    print('debugging 5: band 8 opened and type set\n')
+    print('debugging 4: band 8 opened and type set\n')
+
+    #### add clause "in case there is a cloud file"
+#    try:
+    clouds10 = interpolate_clouds_to_10m(file_clouds,band3)
+#    except Exception, err:
+#        sys.stderr.write('ERROR: %s\n' % str(err))
+
+    print('debugging 5: clouds 10 finished\n')
+
+    clouds_bool = (clouds10==2) | (clouds10==3)
 
 #    profile = dataset3.profile
 #    profile.update(dtype=int,driver='GTiff',count=1)
@@ -48,6 +48,10 @@ def ndwi_from_jp2(sceneJp2):
     #### there should not be any zeros in the denominator, because the products are unsigned int!
     #print('debugging 7: avoiding zeros in the denominator')
     #notzeros= (band3+band8 != 0)
+    print('ndwi shape:')
+    NDWI.shape
+    print('clouds_bool shape:')
+    clouds_bool.shape
 
     NDWI = (band3-band8)/(band3+band8)
 
@@ -67,6 +71,7 @@ def ndwi_from_jp2(sceneJp2):
 def ndwi2watermask():
     print("Executing ndwi2watermask():")
     items=os.listdir(pths.s2aIn)
+
     for item in items:
         item=pths.s2aIn + '/' + item
         if re.search('^.*\.zip$', item):
