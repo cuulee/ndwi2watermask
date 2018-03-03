@@ -41,9 +41,9 @@ def ndwi_from_jp2(sceneJp2):
     band8 = band8.astype(float)
     print('debugging 5: band 8 opened and type set\n')
 
-    profile = dataset3.profile
-    profile.update(dtype=rio.float32,count=1)
-    print('debugging 6: profile of ndwi set. calculating ndwi\n')
+#    profile = dataset3.profile
+#    profile.update(dtype=int,driver='GTiff',count=1)
+#    print('debugging 6: profile of ndwi set. calculating ndwi\n')
 
     #### there should not be any zeros in the denominator, because the products are unsigned int!
     #print('debugging 7: avoiding zeros in the denominator')
@@ -53,14 +53,14 @@ def ndwi_from_jp2(sceneJp2):
 
     print('filtering out clouds:\n')
 
-    ndwi = NDWI[np.logical_not(clouds_bool)] > 0
+    ndwi_bool = NDWI[np.logical_not(clouds_bool)] > 0
 
     print('potentially critical point: from boolean to int\n')
-    ndwi=ndwi.astype(int)
+    ndwi_int=ndwi_bool.astype('int16')
 
     print('debugging 8: writing out\n')
-    with rio.open(pths.s2aOut + "/" + scene + '.tif', 'w', **profile) as dst:
-        dst.write(ndwi, 1)
+    with rio.open(pths.s2aOut + "/" + scene + '.tif', 'w',driver='GTiff',height=ndwi_int.shape[0], width=ndwi_int.shape[1],count=1,dtype=np.int16) as dst:
+        dst.write(ndwi_int, 1)
     #dst.write(ndwi.astype(rio.float64), 1)
 
 
