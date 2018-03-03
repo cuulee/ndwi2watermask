@@ -32,11 +32,7 @@ def main():
     elif sys.argv[1]=="test":
         #### tests environment
         import modules.ndwi as n2w
-<<<<<<< HEAD
         n2w.ndwi2watermask()
-=======
-            n2w.ndwi2watermask()
->>>>>>> e24b2ea57f12fe9cd3ffb93935eada43ab3a10f1
     else:
         print('please provide one of "rmclouds", "getscenes" or "ndwi"')
 
