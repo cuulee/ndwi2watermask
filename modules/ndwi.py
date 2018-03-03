@@ -33,7 +33,7 @@ def ndwi_from_jp2(sceneJp2):
 
     #### add clause "in case there is a cloud file"
 #    try:
-    clouds10 = interpolate_clouds_to_10m(file_clouds,band3)
+    clouds10 = interpolate_clouds_to_10m(file_clouds)
 #    except Exception, err:
 #        sys.stderr.write('ERROR: %s\n' % str(err))
 
