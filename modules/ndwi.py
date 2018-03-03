@@ -48,14 +48,13 @@ def ndwi_from_jp2(sceneJp2):
     #### there should not be any zeros in the denominator, because the products are unsigned int!
     #print('debugging 7: avoiding zeros in the denominator')
     #notzeros= (band3+band8 != 0)
+
+    NDWI = (band3-band8)/(band3+band8)
+
     print('ndwi shape:')
     NDWI.shape
     print('clouds_bool shape:')
     clouds_bool.shape
-
-    NDWI = (band3-band8)/(band3+band8)
-
-    print('filtering out clouds:\n')
 
     ndwi_bool = NDWI[np.logical_not(clouds_bool)] > 0
 
