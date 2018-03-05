@@ -12,7 +12,7 @@ import re
 #ar=np.random.random_integers(0,100,2500)
 #ar.shape=(50,50)
 #ar_bool = ar > 50
-#ar_out[ar<50] = 
+#ar_out[ar<50] =
 
 #ar_bool.shape
 
@@ -84,7 +84,7 @@ def ndwi_from_jp2(sceneJp2):
     print(ndwi_int[1:5,1:5])
 
     print('debugging 8: writing out\n')
-    with rio.open(pths.s2aOut + "/" + scene + '.tif', 'w',driver='GTiff',height=ndwi_int.shape[0], width=ndwi_int.shape[1],count=1,dtype=np.int16) as dst:
+    with rio.open(pths.s2aOut + "/" + scene + '.tif', 'w',driver='GTiff',crs=dataset3.crs,transform=dataset3.transform,height=ndwi_int.shape[0], width=ndwi_int.shape[1],count=1,dtype=np.int16) as dst:
         dst.write(ndwi_int, 1)
 
 
