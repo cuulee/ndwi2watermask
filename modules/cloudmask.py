@@ -111,7 +111,9 @@ def runFmaskStack(sceneJp2):
         exitFlag="cloud.img already exists"
     return(exitFlag)
 
-#    fmask_sentinel2Stacked.py -a allbands.vrt -z angles.img -o cloud.img
+#def filter_zeros(band):
+#    band_out = band[band>0]
+#    return(band_out)
 
 def interpolate_clouds_to_10m(file_clouds):
     print('interpolate_clouds_to_10m:\n')
