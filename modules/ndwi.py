@@ -7,6 +7,17 @@ import modules.getpaths as pths
 import numpy as np
 import re
 
+
+### some exercises with matrices to make sure everything is working below
+#ar=np.random.random_integers(0,100,2500)
+#ar.shape=(50,50)
+#ar_bool = ar > 50
+#ar_bool.shape
+
+#ar[ar_bool] = 0
+#ar.shape
+
+
 def ndwi_from_jp2(sceneJp2):
     scene=sceneJp2[0].split(".SAFE/GRANULE")[0]
     banddir = getBandDir(sceneJp2)
@@ -58,21 +69,21 @@ def ndwi_from_jp2(sceneJp2):
     print(clouds_bool[1:5,1:5])
     print(clouds_bool.shape)
 
-    ndwi_bool = NDWI[np.logical_not(clouds_bool)] > 0
+    ndwi_bool = NDWI > 0
     print('ndwi_bool shape:\n')
-    print(ndwi_bool[1:5,1:5])
     print(ndwi_bool.shape)
+    print(ndwi_bool[1:5,1:5])
 
     print('potentially critical point: from boolean to int\n')
     ndwi_int=ndwi_bool.astype('int16')
+    ndwi_int[clouds_bool] = 0
     print('ndwi_int shape:\n')
-    print(ndwi_int[1:5,1:5])
     print(ndwi_int.shape)
+    print(ndwi_int[1:5,1:5])
 
-#    print('debugging 8: writing out\n')
-#    with rio.open(pths.s2aOut + "/" + scene + '.tif', 'w',driver='GTiff',height=ndwi_int.shape[0], width=ndwi_int.shape[1],count=1,dtype=np.int16) as dst:
-#        dst.write(ndwi_int, 1)
-    #dst.write(ndwi.astype(rio.float64), 1)
+    print('debugging 8: writing out\n')
+    with rio.open(pths.s2aOut + "/" + scene + '.tif', 'w',driver='GTiff',height=ndwi_int.shape[0], width=ndwi_int.shape[1],count=1,dtype=np.int16) as dst:
+        dst.write(ndwi_int, 1)
 
 
 def ndwi2watermask():
