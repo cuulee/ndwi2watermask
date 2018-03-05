@@ -6,6 +6,19 @@ import os
 import modules.getpaths as pths
 import numpy as np
 import re
+from shutil import rmtree
+
+## some exercises with geotiffs:
+
+#scene='/home/delgado/scratch/s2a_scenes/out/S2A_MSIL1C_20180223T130241_N0206_R095_T24MTT_20180223T192653.tif'
+#dataset = rio.open(scene)
+#dataset.crs
+
+
+## this is not working in current version of rasterio (0.36)
+#with rio.open(scene) as src:
+#    w = src.read(1, window=Window(0, 0, 10, 10))
+
 
 
 ### some exercises with matrices to make sure everything is working below
@@ -105,8 +118,8 @@ def ndwi2watermask():
             print('fmask: finished ' + item+'\n')
             print('creating ndwi: ' + item+'\n')
             ndwi_from_jp2(sceneJp2)
-
-
+            os.remove(item)
+            rmtree(item[:-4]+'.SAFE')
 
 
 def test_one_ndwi():
