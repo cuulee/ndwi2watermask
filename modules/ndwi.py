@@ -12,8 +12,11 @@ import re
 #ar=np.random.random_integers(0,100,2500)
 #ar.shape=(50,50)
 #ar_bool = ar > 50
+<<<<<<< HEAD
 #ar_out[ar<50] = 
 
+=======
+>>>>>>> 86d432ca40f459ec922f7e4e13587e050eb60dcd
 #ar_bool.shape
 
 #ar[ar_bool] = 0
