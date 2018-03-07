@@ -12,19 +12,19 @@ from shutil import rmtree
 
 #scene='/home/delgado/scratch/s2a_scenes/out/S2A_MSIL1C_20180223T130241_N0206_R095_T24MTT_20180223T192653.tif'
 #dataset = rio.open(scene)
-#dataset.crs
-
 
 ## this is not working in current version of rasterio (0.36)
 #with rio.open(scene) as src:
 #    w = src.read(1, window=Window(0, 0, 10, 10))
 
+#dataset.crs
+#band3 = dataset3.read(1)
 
 
 ### some exercises with matrices to make sure everything is working below
 #ar=np.random.random_integers(0,100,2500)
 #ar.shape=(50,50)
-#ar_bool = ar > 50
+#np.sum(ar > -1)
 #ar_out[ar<50] =
 
 #ar_bool.shape
@@ -57,48 +57,44 @@ def ndwi_from_jp2(sceneJp2):
     band8 = band8.astype(float)
     print('debugging 4: band 8 opened and type set\n')
 
-    #### add clause "in case there is a cloud file"
-#    try:
-    clouds10 = interpolate_clouds_to_10m(file_clouds)
+#### no interpolation necessary because clouds are being computed in 10 m resolution
+
+#    clouds10 = interpolate_clouds_to_10m(file_clouds)
 #    except Exception, err:
 #        sys.stderr.write('ERROR: %s\n' % str(err))
 
-    print('debugging 5: clouds 10 finished\n')
+    dataset_clouds = rio.open(file_clouds)
+    clouds10 = dataset_clouds.read(1)
 
-    clouds_bool = (clouds10==2) | (clouds10==3)
+    ## proceed only if the cloudmask is smaller than 70% of total scene
+    if(np.sum(clouds10) < 0.7*band3.shape[0]*band3.shape[1]):
 
-#    profile = dataset3.profile
-#    profile.update(dtype=int,driver='GTiff',count=1)
-#    print('debugging 6: profile of ndwi set. calculating ndwi\n')
+        clouds_bool = (clouds10==2) | (clouds10==3)
 
-    #### there should not be any zeros in the denominator, because the products are unsigned int!
-    #print('debugging 7: avoiding zeros in the denominator')
-    #notzeros= (band3+band8 != 0)
+        NDWI = (band3-band8)/(band3+band8)
 
-    NDWI = (band3-band8)/(band3+band8)
+        print('ndwi shape:\n')
+        print(NDWI[1:5,1:5])
+        print(NDWI.shape)
+        print('clouds_bool shape:\n')
+        print(clouds_bool[1:5,1:5])
+        print(clouds_bool.shape)
 
-    print('ndwi shape:\n')
-    print(NDWI[1:5,1:5])
-    print(NDWI.shape)
-    print('clouds_bool shape:\n')
-    print(clouds_bool[1:5,1:5])
-    print(clouds_bool.shape)
+        ndwi_bool = NDWI > 0
+        print('ndwi_bool shape:\n')
+        print(ndwi_bool.shape)
+        print(ndwi_bool[1:5,1:5])
 
-    ndwi_bool = NDWI > 0
-    print('ndwi_bool shape:\n')
-    print(ndwi_bool.shape)
-    print(ndwi_bool[1:5,1:5])
+        print('potentially critical point: from boolean to int\n')
+        ndwi_int=ndwi_bool.astype('int16')
+        ndwi_int[clouds_bool] = 0
+        print('ndwi_int shape:\n')
+        print(ndwi_int.shape)
+        print(ndwi_int[1:5,1:5])
 
-    print('potentially critical point: from boolean to int\n')
-    ndwi_int=ndwi_bool.astype('int16')
-    ndwi_int[clouds_bool] = 0
-    print('ndwi_int shape:\n')
-    print(ndwi_int.shape)
-    print(ndwi_int[1:5,1:5])
-
-    print('debugging 8: writing out\n')
-    with rio.open(pths.s2aOut + "/" + scene + '.tif', 'w',driver='GTiff',crs=dataset3.crs,transform=dataset3.transform,height=ndwi_int.shape[0], width=ndwi_int.shape[1],count=1,dtype=np.int16) as dst:
-        dst.write(ndwi_int, 1)
+        print('debugging 8: writing out\n')
+        with rio.open(pths.s2aOut + "/" + scene + '.tif', 'w',driver='GTiff',crs=dataset3.crs,transform=dataset3.transform,height=ndwi_int.shape[0], width=ndwi_int.shape[1],count=1,dtype=np.int16) as dst:
+            dst.write(ndwi_int, 1)
 
 
 def ndwi2watermask():

@@ -21,7 +21,7 @@ def getscenes():
                             date(tf.year,tf.month,tf.day)
                             ),
                             platformname='Sentinel-2',
-                            cloudcoverpercentage = (0, 30))
+                            cloudcoverpercentage = (0, 20))
 
     # download all results from the search
     #s2aIn = '/home/delgado/Documents/tmp' # in case you are just testing
