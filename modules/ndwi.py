@@ -77,11 +77,8 @@ def ndwi2watermask():
                 with fiona.open(pths.s2aIn + '/' + f, "r") as jsonfile:
                     features.append([feature["geometry"] for feature in jsonfile])
 
-
-            ### still have to try nodata mask https://mapbox.github.io/rasterio/topics/masks.html
-            ####
-            ####
-            ####
+            ## this should work!
+            out_masked, out_transform = rasterio.mask.mask(dataset3,features,all_touched=True,invert=False)
 
 
             os.remove(item)
