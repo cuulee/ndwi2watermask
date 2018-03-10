@@ -8,7 +8,8 @@ from rasterio.warp import reproject,Resampling
 from affine import Affine
 import rasterio as rio
 
-def rmclouds():
+
+def rmfmask():
     print("Executing rmclouds():")
     items=os.listdir(pths.s2aIn)
     for item in items:
@@ -24,17 +25,35 @@ def rmclouds():
             runFmaskStack(sceneJp2)
             print('fmask: finished ' + item+'\n')
 
+#zipfl='/home/delgado/scratch/s2a_scenes/in.bak/S2B_MSIL1C_20180225T125259_N0206_R052_T24MYV_20180225T131850.zip'
+
 def unzipJp2(zipfl):
     sceneZip = zipfile.ZipFile(zipfl)
     scenefls = sceneZip.namelist()
     sceneJp2=[]
     for line in scenefls:
-        if re.search('.*IMG_DATA.*_B[0-9,A]{2}.*.jp2', line) :
+        if re.search('.*IMG_DATA.*_B[0,3,8]{2}.*.jp2', line) :
             sceneJp2.append(line)
-        if not os.path.isfile(pths.s2aIn + '/' + line):
             sceneZip.extract(line,pths.s2aIn)
     sceneZip.close()
     return(sceneJp2)
+
+
+def unzipMasks(zipfl):
+    sceneZip = zipfile.ZipFile(zipfl)
+    scenefls = sceneZip.namelist()
+    sceneMasks=[]
+    for line in scenefls:
+        if re.search('.*MSK_CLOUDS_B00.gml', line) :
+            sceneZip.extract(line,pths.s2aIn)
+            subprocess.check_call(['ogr2ogr','-f','GeoJSON',pths.s2aIn + '/' + line[:-3]+'geojson',pths.s2aIn + '/' + line])
+            sceneMasks.append(line[:-3]+'geojson')
+        if re.search('.*MSK_NODATA.*_B[0,3,8]{2}.*.gml', line) :
+            sceneZip.extract(line,pths.s2aIn)
+            subprocess.check_call(['ogr2ogr','-f','GeoJSON',pths.s2aIn + '/' + line[:-3]+'geojson',pths.s2aIn + '/' + line])
+            sceneMasks.append(line[:-3]+'geojson')
+    sceneZip.close()
+    return(sceneMasks)
 
 def getParentDir(path):
     parentdir=path.split('/')

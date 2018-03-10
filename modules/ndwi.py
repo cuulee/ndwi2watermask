@@ -1,4 +1,5 @@
-from modules.cloudmask import *
+from modules.cloudmask import unzipJp2,unzipMasks,getBandDir
+import fiona
 import glob
 import rasterio as rio
 import zipfile
@@ -31,37 +32,64 @@ from shutil import rmtree
 
 #ar[ar_bool] = 0
 #ar.shape
+pths.s2aIn="/home/delgado/Documents/tmp"
+def ndwi2watermask():
+    print("Executing ndwi2watermask():")
+    items=os.listdir(pths.s2aIn)
+    for item in items:
+        item=pths.s2aIn + '/' + item
+        if re.search('^.*\.zip$', item):
+            sceneJp2 = unzipJp2(item)
+            sceneMasks = unzipMasks(item)
+            scene=sceneJp2[0].split(".SAFE/GRANULE")[0]
+            banddir = getBandDir(sceneJp2)
+            maskdir = getBandDir(sceneMasks)
+
+            p3 = glob.glob(banddir + '/*B03.jp2')
+            p8 = glob.glob(banddir + '/*B08.jp2')
+
+            ### the product is provided as a uint16.
+            ### usually one could divide by 1000 to get the real TOA values,
+            ### but since we are interested in the index, there is no need for that
+            print("Opening band 3\n")
+            dataset3 = rio.open(p3[0])
+            band3 = dataset3.read(1)
+            ### here we convert it o float so the division will work.
+            band3 = band3.astype(float)
+
+            print("Opening band 8\n")
+            dataset8 = rio.open(p8[0])
+            band8 = dataset8.read(1)
+            band8 = band8.astype(float)
+
+            print("Computing NDWI\n")
+
+            NDWI = (band3-band8)/(band3+band8)
+            ndwi_bool = NDWI > 0
+
+            print('potentially critical point: from boolean to int\n')
+            ndwi_int=ndwi_bool.astype('int16')
+
+            #### this is working :
+            print("Opening cloud and nodata masks\n")
+            features=[]
+            for f in sceneMasks:
+                with fiona.open(pths.s2aIn + '/' + f, "r") as jsonfile:
+                    features.append([feature["geometry"] for feature in jsonfile])
+
+
+            ### still have to try nodata mask https://mapbox.github.io/rasterio/topics/masks.html
+            ####
+            ####
+            ####
+
+
+            os.remove(item)
+            rmtree(item[:-4]+'.SAFE')
 
 
 def ndwi_from_jp2(sceneJp2):
-    scene=sceneJp2[0].split(".SAFE/GRANULE")[0]
-    banddir = getBandDir(sceneJp2)
-    file_clouds = banddir + '/cloud.img'
-    print('debugging 1: '+banddir+'\n')
-    p3 = glob.glob(banddir + '/*B03.jp2')
-    p8 = glob.glob(banddir + '/*B08.jp2')
-    print('debugging 2: getting paths to bands \n')
 
-    ### the product is provided as a uint16.
-    ### usually one could divide by 1000 to get the real TOA values,
-    ### but since we are interested in the index, there is no need for that
-    dataset3 = rio.open(p3[0])
-    band3 = dataset3.read(1)
-    ### here we convert it o float so the division will work.
-    band3 = band3.astype(float)
-    print('debugging 3: band 3 opened and type set\n')
-
-    dataset8 = rio.open(p8[0])
-    band8 = dataset8.read(1)
-    band8 = band8.astype(float)
-    print('debugging 4: band 8 opened and type set\n')
-
-    NDWI = (band3-band8)/(band3+band8)
-
-    ndwi_bool = NDWI > 0
-
-    print('potentially critical point: from boolean to int\n')
-    ndwi_int=ndwi_bool.astype('int16')
 
 
 #### no interpolation necessary because clouds are being computed in 10 m resolution
@@ -99,27 +127,6 @@ def ndwi_from_jp2(sceneJp2):
         print("Warning: writing out watermask without cloudmask!\n")
         with rio.open(pths.s2aOut + "/" + scene + '.tif', 'w',driver='GTiff',crs=dataset3.crs,transform=dataset3.transform,height=ndwi_int.shape[0], width=ndwi_int.shape[1],count=1,dtype=np.int16) as dst:
             dst.write(ndwi_int, 1)
-
-
-def ndwi2watermask():
-    print("Executing ndwi2watermask():")
-    items=os.listdir(pths.s2aIn)
-
-    for item in items:
-        item=pths.s2aIn + '/' + item
-        if re.search('^.*\.zip$', item):
-            sceneJp2 = unzipJp2(item)
-            #print('building vrt\n')
-            #runGdalbuildvrt(sceneJp2)
-            #print('fmask: making angles\n')
-            #runFmaskMakeAngles(sceneJp2)
-            #print('fmask: generating cloud mask\n')
-            #runFmaskStack(sceneJp2)
-            #print('fmask: finished ' + item+'\n')
-            #print('creating ndwi: ' + item+'\n')
-            ndwi_from_jp2(sceneJp2)
-            os.remove(item)
-            rmtree(item[:-4]+'.SAFE')
 
 
 def test_one_ndwi():
