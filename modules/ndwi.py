@@ -67,8 +67,6 @@ def ndwi2watermask():
             band8, out_transform =rasterio.mask.mask(dataset8,masks,all_touched=True,invert=False)
             band8 = band8.astype(float)
 
-
-
             print("Computing NDWI\n")
 
             NDWI = (band3-band8)/(band3+band8)
