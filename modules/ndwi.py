@@ -34,7 +34,7 @@ from rasterio.features import shapes
 
 #ar[ar_bool] = 0
 #ar.shape
-pths.s2aIn="/home/delgado/Documents/tmp"
+#pths.s2aIn="/home/delgado/Documents/tmp"
 def ndwi2watermask():
     print("Executing ndwi2watermask():")
     items=os.listdir(pths.s2aIn)
