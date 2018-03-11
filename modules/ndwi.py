@@ -34,7 +34,7 @@ from rasterio.features import shapes
 
 #ar[ar_bool] = 0
 #ar.shape
-#pths.s2aIn="/home/delgado/Documents/tmp"
+pths.s2aIn="/home/delgado/Documents/tmp"
 def ndwi2watermask():
     print("Executing ndwi2watermask():")
     items=os.listdir(pths.s2aIn)
@@ -51,33 +51,48 @@ def ndwi2watermask():
             banddir = getBandDir(sceneJp2)
             maskdir = getBandDir(sceneMasks)
 
-            p3 = glob.glob(banddir + '/*B03.jp2')
-            p8 = glob.glob(banddir + '/*B08.jp2')
+            p3 = glob.glob(banddir + '/*B03.jp2.jp.tif')
+            p8 = glob.glob(banddir + '/*B08.jp2.jp.tif')
 
             ### the product is provided as a uint16.
             ### usually one could divide by 1000 to get the real TOA values,
             ### but since we are interested in the index, there is no need for that
             print("Opening band 3\n")
             dataset3 = rio.open(p3[0])
-            band3, out_transform =rasterio.mask.mask(dataset3,masks,all_touched=True,invert=False)
+            band3, out_transform =rasterio.mask.mask(dataset3,masks,all_touched=True,invert=True)
             band3 = band3.astype(float)
 
             print("Opening band 8\n")
             dataset8 = rio.open(p8[0])
-            band8, out_transform =rasterio.mask.mask(dataset8,masks,all_touched=True,invert=False)
+            band8, out_transform =rasterio.mask.mask(dataset8,masks,all_touched=True,invert=True)
             band8 = band8.astype(float)
-
             print("Computing NDWI\n")
 
-            NDWI = (band3-band8)/(band3+band8)
+
+            ### the threshold must be set here, because if it is lower than 0, it messes up with the mask
+            thresh=-0.1
+            NDWI = (band3-band8)/(band3+band8)-thresh
             ndwi_bool = NDWI > 0
 
-            print('potentially critical point: from boolean to int\n')
-            ndwi_int=ndwi_bool.astype('int16')
+            ndwi_int=NDWI.astype('int16')
+            ndwi_int[:]=0
+            ndwi_int[ndwi_bool]=1
 
-            ### polygonize
-            lpols = shapes(ndwi_int)
+            out_meta = dataset3.meta.copy()
 
+        # save the resulting raster
+            out_meta.update({"driver": "GTiff",
+                "height": ndwi_int.shape[1],
+                "width": ndwi_int.shape[2],
+                "transform": out_transform,
+                "dtype": 'int16'})
+            with rasterio.open(pths.s2aIn + "/clipped.tif", "w", **out_meta) as dest:
+                dest.write(ndwi_int)
 
+            ### polygonize is still now working quite well...
+#            lpols = shapes(ndwi_int)
+#            ndwi_int
+
+#            list(lpols)
             #os.remove(item)
             #rmtree(item[:-4]+'.SAFE')
