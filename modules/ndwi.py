@@ -10,7 +10,7 @@ import numpy as np
 import re
 from shutil import rmtree
 import json
-
+from rasterio.features import shapes
 ## some exercises with geotiffs:
 
 #scene='/home/delgado/scratch/s2a_scenes/out/S2A_MSIL1C_20180223T130241_N0206_R095_T24MTT_20180223T192653.tif'
@@ -43,6 +43,10 @@ def ndwi2watermask():
         if re.search('^.*\.zip$', item):
             sceneJp2 = unzipJp2(item)
             sceneMasks = unzipMasks(item)
+
+            ### use nodata and clouds as masks
+            masks = list_pols(sceneMasks)
+
             scene=sceneJp2[0].split(".SAFE/GRANULE")[0]
             banddir = getBandDir(sceneJp2)
             maskdir = getBandDir(sceneMasks)
@@ -55,14 +59,15 @@ def ndwi2watermask():
             ### but since we are interested in the index, there is no need for that
             print("Opening band 3\n")
             dataset3 = rio.open(p3[0])
-            band3 = dataset3.read(1)
-            ### here we convert it o float so the division will work.
+            band3, out_transform =rasterio.mask.mask(dataset3,masks,all_touched=True,invert=False)
             band3 = band3.astype(float)
 
             print("Opening band 8\n")
             dataset8 = rio.open(p8[0])
-            band8 = dataset8.read(1)
+            band8, out_transform =rasterio.mask.mask(dataset8,masks,all_touched=True,invert=False)
             band8 = band8.astype(float)
+
+
 
             print("Computing NDWI\n")
 
@@ -72,25 +77,12 @@ def ndwi2watermask():
             print('potentially critical point: from boolean to int\n')
             ndwi_int=ndwi_bool.astype('int16')
 
-            #### this is working :
-#            print("Opening cloud and nodata masks\n")
-#            features=[]
-#            for f in sceneMasks:
-#                with fiona.open(pths.s2aIn + '/' + f, "r") as jsonfile:
-#                    features.append([feature["geometry"] for feature in jsonfile])
+            ### polygonize
+            lpols = shapes(ndwi_int)
 
-            ## this should work!
-            mpols = merge_pols(sceneMasks)
-            lpols = list_pols(sceneMasks)
-            len(lpols)
-            out_masked, out_transform =rasterio.mask.mask(dataset3,lpols,all_touched=True,invert=False)
 
             #os.remove(item)
             #rmtree(item[:-4]+'.SAFE')
-
-
-
-
 
 
 
