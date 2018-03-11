@@ -34,7 +34,7 @@ from rasterio.features import shapes
 
 #ar[ar_bool] = 0
 #ar.shape
-pths.s2aIn="/home/delgado/Documents/tmp"
+#pths.s2aIn="/home/delgado/Documents/tmp"
 def ndwi2watermask():
     print("Executing ndwi2watermask():")
     items=os.listdir(pths.s2aIn)
@@ -51,8 +51,8 @@ def ndwi2watermask():
             banddir = getBandDir(sceneJp2)
             maskdir = getBandDir(sceneMasks)
 
-            p3 = glob.glob(banddir + '/*B03.jp2.jp.tif')
-            p8 = glob.glob(banddir + '/*B08.jp2.jp.tif')
+            p3 = glob.glob(banddir + '/*B03.jp2')
+            p8 = glob.glob(banddir + '/*B08.jp2')
 
             ### the product is provided as a uint16.
             ### usually one could divide by 1000 to get the real TOA values,
@@ -86,7 +86,7 @@ def ndwi2watermask():
                 "width": ndwi_int.shape[2],
                 "transform": out_transform,
                 "dtype": 'int16'})
-            with rasterio.open(pths.s2aIn + "/clipped.tif", "w", **out_meta) as dest:
+            with rasterio.open(pths.s2aIn + '/' + item[:-3] + '_watermask.tif' , "w", **out_meta) as dest:
                 dest.write(ndwi_int)
 
             ### polygonize is still now working quite well...
