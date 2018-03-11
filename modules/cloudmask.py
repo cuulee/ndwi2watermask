@@ -7,6 +7,39 @@ import re
 from rasterio.warp import reproject,Resampling
 from affine import Affine
 import rasterio as rio
+import json
+import geojson
+from functools import partial
+import shapely.geometry
+import shapely.ops
+
+#pths.s2aIn="/home/delgado/Documents/tmp"
+#sceneMasks = ['S2B_MSIL1C_20180225T125259_N0206_R052_T24MYV_20180225T131850.SAFE/GRANULE/L1C_T24MYV_A005083_20180225T125259/QI_DATA/MSK_CLOUDS_B00.geojson', 'S2B_MSIL1C_20180225T125259_N0206_R052_T24MYV_20180225T131850.SAFE/GRANULE/L1C_T24MYV_A005083_20180225T125259/QI_DATA/MSK_NODATA_B03.geojson', 'S2B_MSIL1C_20180225T125259_N0206_R052_T24MYV_20180225T131850.SAFE/GRANULE/L1C_T24MYV_A005083_20180225T125259/QI_DATA/MSK_NODATA_B08.geojson']
+
+def list_pols(sceneMasks):
+    listPolygon = list()
+    for fname in sceneMasks:
+#        fname=sceneMasks[0]
+        with open(pths.s2aIn + '/' + fname) as geojson1:
+            poly_geojson = json.load(geojson1)
+
+        for feat in poly_geojson['features']:
+            listPolygon.append(feat['geometry'])
+    return(listPolygon)
+
+def merge_pols(sceneMasks):
+    mergedPolygon = shapely.geometry.Polygon()
+    for fname in sceneMasks:
+#        fname=sceneMasks[0]
+        with open(pths.s2aIn + '/' + fname) as geojson1:
+            poly_geojson = json.load(geojson1)
+
+        for feat in poly_geojson['features']:
+            poly = shapely.geometry.asShape(feat['geometry'])
+            mergedPolygon = mergedPolygon.union(poly)
+    # using geojson module to convert from WKT back into GeoJSON format
+    geojson_out = geojson.Feature(geometry=mergedPolygon,properties={})
+    return(geojson_out)
 
 
 def rmfmask():
@@ -34,7 +67,8 @@ def unzipJp2(zipfl):
     for line in scenefls:
         if re.search('.*IMG_DATA.*_B[0,3,8]{2}.*.jp2', line) :
             sceneJp2.append(line)
-            sceneZip.extract(line,pths.s2aIn)
+            if(not os.path.isfile(pths.s2aIn + '/' + line)):
+                sceneZip.extract(line,pths.s2aIn)
     sceneZip.close()
     return(sceneJp2)
 

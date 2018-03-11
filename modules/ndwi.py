@@ -1,4 +1,5 @@
-from modules.cloudmask import unzipJp2,unzipMasks,getBandDir
+import rasterio.mask
+from modules.cloudmask import list_pols,merge_pols,unzipJp2,unzipMasks,getBandDir
 import fiona
 import glob
 import rasterio as rio
@@ -8,6 +9,7 @@ import modules.getpaths as pths
 import numpy as np
 import re
 from shutil import rmtree
+import json
 
 ## some exercises with geotiffs:
 
@@ -71,24 +73,28 @@ def ndwi2watermask():
             ndwi_int=ndwi_bool.astype('int16')
 
             #### this is working :
-            print("Opening cloud and nodata masks\n")
-            features=[]
-            for f in sceneMasks:
-                with fiona.open(pths.s2aIn + '/' + f, "r") as jsonfile:
-                    features.append([feature["geometry"] for feature in jsonfile])
+#            print("Opening cloud and nodata masks\n")
+#            features=[]
+#            for f in sceneMasks:
+#                with fiona.open(pths.s2aIn + '/' + f, "r") as jsonfile:
+#                    features.append([feature["geometry"] for feature in jsonfile])
 
             ## this should work!
-            out_masked, out_transform = rasterio.mask.mask(dataset3,features,all_touched=True,invert=False)
+            mpols = merge_pols(sceneMasks)
+            lpols = list_pols(sceneMasks)
+            len(lpols)
+            out_masked, out_transform =rasterio.mask.mask(dataset3,lpols,all_touched=True,invert=False)
+
+            #os.remove(item)
+            #rmtree(item[:-4]+'.SAFE')
 
 
-            os.remove(item)
-            rmtree(item[:-4]+'.SAFE')
+
+
+
 
 
 def ndwi_from_jp2(sceneJp2):
-
-
-
 #### no interpolation necessary because clouds are being computed in 10 m resolution
 
 #    clouds10 = interpolate_clouds_to_10m(file_clouds)
