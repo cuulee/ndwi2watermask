@@ -22,5 +22,5 @@ def main():
         print('please provide one of "rmclouds", "getscenes" or "ndwi"')
 
 
-if __name__ == "__main__":
-    print main()
+#if __name__ == "__main__":
+#    print main()
