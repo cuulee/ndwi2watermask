@@ -96,5 +96,5 @@ def ndwi2watermask():
 #            ndwi_int
 
 #            list(lpols)
-            #os.remove(item)
-            #rmtree(item[:-4]+'.SAFE')
+            os.remove(item)
+            rmtree(item[:-4]+'.SAFE')
