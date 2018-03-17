@@ -40,6 +40,7 @@ def ndwi2watermask():
     print("Executing ndwi2watermask():")
     items=os.listdir(pths.s2aIn)
     for item in items:
+        scenename=item
         item=pths.s2aIn + '/' + item
         if re.search('^.*\.zip$', item):
             sceneJp2 = unzipJp2(item)
@@ -87,7 +88,7 @@ def ndwi2watermask():
                 "width": ndwi_int.shape[2],
                 "transform": out_transform,
                 "dtype": 'int16'})
-            with rasterio.open(pths.s2aOut + '/' + item[:-3] + '_watermask.tif' , "w", **out_meta) as dest:
+            with rasterio.open(pths.s2aOut + '/' + scenename[:-4] + '_watermask.tif' , "w", **out_meta) as dest:
                 dest.write(ndwi_int)
 
             ### polygonize is still now working quite well...
