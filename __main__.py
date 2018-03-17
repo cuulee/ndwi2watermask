@@ -7,28 +7,13 @@ def main():
         print("an argument is needed, for example: cleanup or get_scenes")
     elif sys.argv[1]=="getscenes":
         import modules.scenes as scenes
-        try:
-            scenes.getscenes()
-            return 0
-#        except Exception, err:
-#            sys.stderr.write('ERROR: %s\n' % str(err))
-#            return 1
+        scenes.getscenes()
     elif sys.argv[1]=="rmclouds":
         import modules.cloudmask as clouds
-        try:
-            clouds.rmclouds()
-            return 0
-#        except Exception, err:
-#            sys.stderr.write('ERROR: %s\n' % str(err))
-#            return 1
+        clouds.rmclouds()
     elif sys.argv[1]=="ndwi":
         import modules.ndwi as n2w
-        try:
-            n2w.ndwi2watermask()
-            return 0
-#        except Exception, err:
-#            sys.stderr.write('ERROR: %s\n' % str(err))
-#            return 1
+        n2w.ndwi2watermask()
     elif sys.argv[1]=="test":
         #### tests environment
         import modules.ndwi as n2w
